@@ -1,0 +1,608 @@
+@prefix gtfs: <http://ontology.gtfs.org/reference#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+gtfs:Agency rdfs:label "Agência"@pt ;
+    rdfs:comment "Agências de transporte com serviço representado neste conjunto de dados."@pt .
+
+gtfs:agency_id rdfs:label "id_agencia"@pt ;
+    rdfs:comment "Identifica uma marca de transporte que é frequentemente sinônimo de uma agência de transporte."@pt .
+
+gtfs:agency_name rdfs:label "nome_agencia"@pt ;
+    rdfs:comment "Nome completo da agência de transporte."@pt .
+
+gtfs:agency_url rdfs:label "url_agencia"@pt ;
+    rdfs:comment "URL da agência de transporte."@pt .
+
+gtfs:agency_timezone rdfs:label "fuso_horario_agencia"@pt ;
+    rdfs:comment "Fuso horário onde a agência de transporte está localizada."@pt .
+
+gtfs:agency_lang rdfs:label "idioma_agencia"@pt ;
+    rdfs:comment "Idioma principal usado por esta agência de transporte (IETF BCP 47)."@pt .
+
+gtfs:agency_phone rdfs:label "telefone_agencia"@pt ;
+    rdfs:comment "Um número de telefone para contato com a agência especificada."@pt .
+
+gtfs:agency_fare_url rdfs:label "url_tarifa_agencia"@pt ;
+    rdfs:comment "URL de uma página da web onde um passageiro pode comprar bilhetes ou outros instrumentos de tarifa."@pt .
+
+gtfs:agency_email rdfs:label "email_agencia"@pt ;
+    rdfs:comment "Endereço de e-mail monitorado ativamente pelo departamento de atendimento ao cliente da agência."@pt .
+
+gtfs:cemv_support rdfs:label "suporte_cemv"@pt ;
+    rdfs:comment "Indica se os passageiros podem acessar um serviço de transporte usando um cartão EMV sem contato."@pt .
+
+gtfs:Stop rdfs:label "Parada"@pt ;
+    rdfs:comment "Locais onde os veículos pegam ou deixam passageiros."@pt .
+
+gtfs:stop_id rdfs:label "id_parada"@pt ;
+    rdfs:comment "Identifica um local: parada/plataforma, estação, entrada/saída, nó genérico ou área de embarque."@pt .
+
+gtfs:stop_code rdfs:label "codigo_parada"@pt ;
+    rdfs:comment "Texto curto ou número que identifica o local para os passageiros."@pt .
+
+gtfs:stop_name rdfs:label "nome_parada"@pt ;
+    rdfs:comment "Nome do local. O nome da parada deve corresponder ao nome voltado para o passageiro."@pt .
+
+gtfs:tts_stop_name rdfs:label "nome_parada_tts"@pt ;
+    rdfs:comment "Versão legível por texto-fala do nome da parada."@pt .
+
+gtfs:stop_desc rdfs:label "descricao_parada"@pt ;
+    rdfs:comment "Descrição do local que fornece informações úteis e de qualidade."@pt .
+
+gtfs:stop_lat rdfs:label "latitude_parada"@pt ;
+    rdfs:comment "Latitude do local."@pt .
+
+gtfs:stop_lon rdfs:label "longitude_parada"@pt ;
+    rdfs:comment "Longitude do local."@pt .
+
+gtfs:zone_id rdfs:label "id_zona"@pt ;
+    rdfs:comment "Identifica a zona tarifária de uma parada."@pt .
+
+gtfs:stop_url rdfs:label "url_parada"@pt ;
+    rdfs:comment "URL de uma página da web sobre o local."@pt .
+
+gtfs:location_type rdfs:label "tipo_localizacao"@pt ;
+    rdfs:comment "Tipo de localização. 0: Parada, 1: Estação, 2: Entrada/Saída, 3: Nó Genérico, 4: Área de Embarque."@pt .
+
+gtfs:parent_station rdfs:label "estacao_pai"@pt ;
+    rdfs:comment "Define a hierarquia entre os diferentes locais."@pt .
+
+gtfs:stop_timezone rdfs:label "fuso_horario_parada"@pt ;
+    rdfs:comment "Fuso horário do local."@pt .
+
+gtfs:wheelchair_boarding rdfs:label "embarque_cadeira_rodas"@pt ;
+    rdfs:comment "Indica se o embarque de cadeira de rodas é possível a partir do local."@pt .
+
+gtfs:level_id rdfs:label "id_nivel"@pt ;
+    rdfs:comment "Nível do local."@pt .
+
+gtfs:platform_code rdfs:label "codigo_plataforma"@pt ;
+    rdfs:comment "Identificador da plataforma para uma parada de plataforma."@pt .
+
+gtfs:stop_access rdfs:label "acesso_parada"@pt ;
+    rdfs:comment "Indica como a parada é acessada para uma estação específica."@pt .
+
+gtfs:Route rdfs:label "Rota"@pt ;
+    rdfs:comment "Rotas de transporte. Uma rota é um grupo de viagens que são exibidas aos passageiros como um único serviço."@pt .
+
+gtfs:route_id rdfs:label "id_rota"@pt ;
+    rdfs:comment "Identifica uma rota."@pt .
+
+gtfs:route_short_name rdfs:label "nome_curto_rota"@pt ;
+    rdfs:comment "Nome curto de uma rota. Frequentemente um identificador curto e abstrato."@pt .
+
+gtfs:route_long_name rdfs:label "nome_longo_rota"@pt ;
+    rdfs:comment "Nome completo de uma rota. Este nome é geralmente mais descritivo do que o nome curto da rota."@pt .
+
+gtfs:route_desc rdfs:label "descricao_rota"@pt ;
+    rdfs:comment "Descrição de uma rota que fornece informações úteis e de qualidade."@pt .
+
+gtfs:route_type rdfs:label "tipo_rota"@pt ;
+    rdfs:comment "Indica o tipo de transporte usado em uma rota."@pt .
+
+gtfs:route_url rdfs:label "url_rota"@pt ;
+    rdfs:comment "URL de uma página da web sobre a rota específica."@pt .
+
+gtfs:route_color rdfs:label "cor_rota"@pt ;
+    rdfs:comment "Designação de cor da rota que corresponde ao material voltado para o público."@pt .
+
+gtfs:route_text_color rdfs:label "cor_texto_rota"@pt ;
+    rdfs:comment "Cor legível para usar no texto desenhado contra um fundo da cor da rota."@pt .
+
+gtfs:route_sort_order rdfs:label "ordem_classificacao_rota"@pt ;
+    rdfs:comment "Ordena as rotas de uma maneira ideal para apresentação aos clientes."@pt .
+
+gtfs:continuous_pickup rdfs:label "embarque_continuo"@pt ;
+    rdfs:comment "Indica que o passageiro pode embarcar no veículo de transporte em qualquer ponto ao longo do trajeto do veículo."@pt .
+
+gtfs:continuous_drop_off rdfs:label "desembarque_continuo"@pt ;
+    rdfs:comment "Indica que o passageiro pode desembarcar do veículo de transporte em qualquer ponto ao longo do trajeto do veículo."@pt .
+
+gtfs:network_id rdfs:label "id_rede"@pt ;
+    rdfs:comment "Identifica um grupo de rotas."@pt .
+
+gtfs:Trip rdfs:label "Viagem"@pt ;
+    rdfs:comment "Viagens para cada rota. Uma viagem é uma sequência de duas ou mais paradas que ocorrem durante um período de tempo específico."@pt .
+
+gtfs:service_id rdfs:label "id_servico"@pt ;
+    rdfs:comment "Identifica um conjunto de datas em que o serviço está disponível para uma ou mais rotas."@pt .
+
+gtfs:trip_id rdfs:label "id_viagem"@pt ;
+    rdfs:comment "Identifica uma viagem."@pt .
+
+gtfs:trip_headsign rdfs:label "letreiro_viagem"@pt ;
+    rdfs:comment "Texto que aparece na sinalização identificando o destino da viagem aos passageiros."@pt .
+
+gtfs:trip_short_name rdfs:label "nome_curto_viagem"@pt ;
+    rdfs:comment "Texto voltado para o público usado para identificar a viagem aos passageiros."@pt .
+
+gtfs:direction_id rdfs:label "id_direcao"@pt ;
+    rdfs:comment "Indica a direção da viagem."@pt .
+
+gtfs:block_id rdfs:label "id_bloco"@pt ;
+    rdfs:comment "Identifica o bloco ao qual a viagem pertence."@pt .
+
+gtfs:shape_id rdfs:label "id_forma"@pt ;
+    rdfs:comment "Identifica uma forma geoespacial descrevendo o trajeto do veículo para uma viagem."@pt .
+
+gtfs:wheelchair_accessible rdfs:label "acessivel_cadeira_rodas"@pt ;
+    rdfs:comment "Indica a acessibilidade para cadeiras de rodas."@pt .
+
+gtfs:bikes_allowed rdfs:label "bicicletas_permitidas"@pt ;
+    rdfs:comment "Indica se bicicletas são permitidas."@pt .
+
+gtfs:cars_allowed rdfs:label "carros_permitidos"@pt ;
+    rdfs:comment "Indica se carros são permitidos."@pt .
+
+gtfs:StopTime rdfs:label "Horário da Parada"@pt ;
+    rdfs:comment "Horários em que um veículo chega e parte de paradas individuais para cada viagem."@pt .
+
+gtfs:arrival_time rdfs:label "horario_chegada"@pt ;
+    rdfs:comment "Horário de chegada em uma parada específica para uma viagem específica em uma rota."@pt .
+
+gtfs:departure_time rdfs:label "horario_partida"@pt ;
+    rdfs:comment "Horário de partida de uma parada específica para uma viagem específica em uma rota."@pt .
+
+gtfs:stop_sequence rdfs:label "sequencia_parada"@pt ;
+    rdfs:comment "Ordem das paradas para uma viagem específica."@pt .
+
+gtfs:stop_headsign rdfs:label "letreiro_parada"@pt ;
+    rdfs:comment "Texto que aparece na sinalização identificando o destino da viagem aos passageiros."@pt .
+
+gtfs:pickup_type rdfs:label "tipo_embarque"@pt ;
+    rdfs:comment "Indica o método de embarque."@pt .
+
+gtfs:drop_off_type rdfs:label "tipo_desembarque"@pt ;
+    rdfs:comment "Indica o método de desembarque."@pt .
+
+gtfs:shape_dist_traveled rdfs:label "distancia_forma_percorrida"@pt ;
+    rdfs:comment "Distância percorrida desde o início da forma."@pt .
+
+gtfs:timepoint rdfs:label "ponto_horario"@pt ;
+    rdfs:comment "Indica se os horários de chegada e partida em uma parada são estritamente cumpridos pelo veículo."@pt .
+
+gtfs:pickup_booking_rule_id rdfs:label "id_regla_reserva_embarque"@pt ;
+    rdfs:comment "Identifica a regra de reserva para embarque de passageiros."@pt .
+
+gtfs:drop_off_booking_rule_id rdfs:label "id_regla_reserva_desembarque"@pt ;
+    rdfs:comment "Identifica a regra de reserva para desembarque de passageiros."@pt .
+
+gtfs:Calendar rdfs:label "Calendário"@pt ;
+    rdfs:comment "Datas de serviço especificadas usando uma programação semanal com datas de início e fim."@pt .
+
+gtfs:monday rdfs:label "segunda"@pt ;
+    rdfs:comment "Disponibilidade de serviço para segundas-feiras."@pt .
+
+gtfs:tuesday rdfs:label "terca"@pt ;
+    rdfs:comment "Disponibilidade de serviço para terças-feiras."@pt .
+
+gtfs:wednesday rdfs:label "quarta"@pt ;
+    rdfs:comment "Disponibilidade de serviço para quartas-feiras."@pt .
+
+gtfs:thursday rdfs:label "quinta"@pt ;
+    rdfs:comment "Disponibilidade de serviço para quintas-feiras."@pt .
+
+gtfs:friday rdfs:label "sexta"@pt ;
+    rdfs:comment "Disponibilidade de serviço para sextas-feiras."@pt .
+
+gtfs:saturday rdfs:label "sabado"@pt ;
+    rdfs:comment "Disponibilidade de serviço para sábados."@pt .
+
+gtfs:sunday rdfs:label "domingo"@pt ;
+    rdfs:comment "Disponibilidade de serviço para domingos."@pt .
+
+gtfs:start_date rdfs:label "data_inicio"@pt ;
+    rdfs:comment "Data de início do serviço."@pt .
+
+gtfs:end_date rdfs:label "data_fim"@pt ;
+    rdfs:comment "Data de término do serviço."@pt .
+
+gtfs:agency rdfs:label "agencia"@pt ;
+    rdfs:comment "A agência que opera esta rota."@pt .
+
+gtfs:route rdfs:label "rota"@pt ;
+    rdfs:comment "A rota da qual esta viagem faz parte."@pt .
+
+gtfs:service rdfs:label "servico"@pt ;
+    rdfs:comment "A programação de serviço (calendário) para esta viagem."@pt .
+
+gtfs:trip rdfs:label "viagem"@pt ;
+    rdfs:comment "A viagem à qual este horário de parada pertence."@pt .
+
+gtfs:stop rdfs:label "parada"@pt ;
+    rdfs:comment "A parada onde este evento ocorre."@pt .
+
+gtfs:CalendarDate rdfs:label "Data do Calendário"@pt ;
+    rdfs:comment "Exceções para os IDs de serviço definidos no arquivo calendar.txt."@pt .
+
+gtfs:date rdfs:label "data"@pt ;
+    rdfs:comment "Data (no formato AAAAMMDD) em que a exceção ocorre/serviço está disponível."@pt .
+
+gtfs:exception_type rdfs:label "tipo_excecao"@pt ;
+    rdfs:comment "Indica se o serviço é adicionado ou removido para a data especificada."@pt .
+
+gtfs:FareAttribute rdfs:label "Atributo de Tarifa"@pt ;
+    rdfs:comment "Informações de tarifa para as rotas de uma organização de transporte."@pt .
+
+gtfs:fare_id rdfs:label "id_tarifa"@pt ;
+    rdfs:comment "Identifica uma classe de tarifa."@pt .
+
+gtfs:price rdfs:label "preco"@pt ;
+    rdfs:comment "Preço da tarifa, na unidade especificada por currency_type."@pt .
+
+gtfs:currency_type rdfs:label "tipo_moeda"@pt ;
+    rdfs:comment "Moeda usada para pagar a tarifa (ISO 4217)."@pt .
+
+gtfs:payment_method rdfs:label "metodo_pagamento"@pt ;
+    rdfs:comment "Indica quando a tarifa deve ser paga."@pt .
+
+gtfs:transfers rdfs:label "transferencias"@pt ;
+    rdfs:comment "Indica o número de transferências permitidas nesta tarifa."@pt .
+
+gtfs:transfer_duration rdfs:label "duracao_transferencia"@pt ;
+    rdfs:comment "Duração em segundos antes que uma transferência expire."@pt .
+
+gtfs:FareRule rdfs:label "Regra de Tarifa"@pt ;
+    rdfs:comment "Regras para aplicação de atributos de tarifa a itinerários."@pt .
+
+gtfs:origin_id rdfs:label "id_origem"@pt ;
+    rdfs:comment "Identifica uma zona de origem."@pt .
+
+gtfs:destination_id rdfs:label "id_destino"@pt ;
+    rdfs:comment "Identifica uma zona de destino."@pt .
+
+gtfs:contains_id rdfs:label "id_contem"@pt ;
+    rdfs:comment "Identifica uma zona pela qual o itinerário passa."@pt .
+
+gtfs:fare rdfs:label "tarifa"@pt ;
+    rdfs:comment "O atributo de tarifa vinculado a esta regra."@pt .
+
+gtfs:Timeframe rdfs:label "Marco de Tempo"@pt ;
+    rdfs:comment "Define um marco de tempo (por exemplo, Pico/Fora de Pico) para regras de tarifa."@pt .
+
+gtfs:timeframe_group_id rdfs:label "id_grupo_marco_tempo"@pt ;
+    rdfs:comment "Identifica um marco de tempo específico."@pt .
+
+gtfs:start_time rdfs:label "hora_inicio"@pt ;
+    rdfs:comment "Hora em que o marco de tempo começa."@pt .
+
+gtfs:end_time rdfs:label "hora_fim"@pt ;
+    rdfs:comment "Hora em que o marco de tempo termina."@pt .
+
+gtfs:RiderCategory rdfs:label "Categoria de Passageiro"@pt ;
+    rdfs:comment "Define uma categoria de passageiros (por exemplo, Idoso, Criança, Estudante)."@pt .
+
+gtfs:rider_category_id rdfs:label "id_categoria_passageiro"@pt ;
+    rdfs:comment "Identifica uma categoria de passageiro."@pt .
+
+gtfs:rider_category_name rdfs:label "nome_categoria_passageiro"@pt ;
+    rdfs:comment "Nome da categoria de passageiro."@pt .
+
+gtfs:is_child rdfs:label "eh_crianca"@pt ;
+    rdfs:comment "Indica se a categoria de passageiro representa uma criança."@pt .
+
+gtfs:is_elderly rdfs:label "eh_idoso"@pt ;
+    rdfs:comment "Indica se a categoria de passageiro representa uma pessoa idosa."@pt .
+
+gtfs:is_student rdfs:label "eh_estudante"@pt ;
+    rdfs:comment "Indica se a categoria de passageiro representa um estudante."@pt .
+
+gtfs:min_age rdfs:label "idade_minima"@pt ;
+    rdfs:comment "Idade mínima para esta categoria de passageiro."@pt .
+
+gtfs:max_age rdfs:label "idade_maxima"@pt ;
+    rdfs:comment "Idade máxima para esta categoria de passageiro."@pt .
+
+gtfs:FareMedia rdfs:label "Mídia de Tarifa"@pt ;
+    rdfs:comment "Descreve a mídia física ou virtual usada para validação de tarifa (por exemplo, cartão de transporte, aplicativo móvel)."@pt .
+
+gtfs:fare_media_id rdfs:label "id_midia_tarifa"@pt ;
+    rdfs:comment "Identifica uma mídia de tarifa."@pt .
+
+gtfs:fare_media_name rdfs:label "nome_midia_tarifa"@pt ;
+    rdfs:comment "Nome da mídia de tarifa."@pt .
+
+gtfs:fare_media_type rdfs:label "tipo_midia_tarifa"@pt ;
+    rdfs:comment "O tipo da mídia de tarifa (0: Nenhuma, 1: Bilhete de papel, 2: Cartão de transporte, etc.)."@pt .
+
+gtfs:FareProduct rdfs:label "Produto Tarifário"@pt ;
+    rdfs:comment "Descreve um produto tarifário específico (por exemplo, Bilhete único, Passe mensal)."@pt .
+
+gtfs:fare_product_id rdfs:label "id_produto_tarifario"@pt ;
+    rdfs:comment "Identifica um produto tarifário."@pt .
+
+gtfs:fare_product_name rdfs:label "nome_produto_tarifario"@pt ;
+    rdfs:comment "Nome do produto tarifário."@pt .
+
+gtfs:amount rdfs:label "valor"@pt ;
+    rdfs:comment "Custo do produto tarifário."@pt .
+
+gtfs:currency rdfs:label "moeda"@pt ;
+    rdfs:comment "Moeda do valor (ISO 4217)."@pt .
+
+gtfs:FareLegRule rdfs:label "Regra de Perna de Tarifa"@pt ;
+    rdfs:comment "Regras para calcular a tarifa de uma perna única de uma jornada."@pt .
+
+gtfs:leg_group_id rdfs:label "id_grupo_perna"@pt ;
+    rdfs:comment "Identifica um grupo de pernas para cálculo de tarifa."@pt .
+
+gtfs:from_area_id rdfs:label "id_area_origem"@pt ;
+    rdfs:comment "Identifica a área de origem."@pt .
+
+gtfs:to_area_id rdfs:label "id_area_destino"@pt ;
+    rdfs:comment "Identifica a área de destino."@pt .
+
+gtfs:from_timeframe_group_id rdfs:label "id_grupo_marco_tempo_origem"@pt ;
+    rdfs:comment "Marco de tempo no início da perna."@pt .
+
+gtfs:to_timeframe_group_id rdfs:label "id_grupo_marco_tempo_destino"@pt ;
+    rdfs:comment "Marco de tempo no final da perna."@pt .
+
+gtfs:FareLegJoinRule rdfs:label "Regra de Junção de Perna de Tarifa"@pt ;
+    rdfs:comment "Regras para juntar dois grupos de pernas."@pt .
+
+gtfs:from_leg_group_id rdfs:label "id_grupo_perna_origem"@pt ;
+    rdfs:comment "O grupo de pernas anterior."@pt .
+
+gtfs:to_leg_group_id rdfs:label "id_grupo_perna_destino"@pt ;
+    rdfs:comment "O grupo de pernas seguinte."@pt .
+
+gtfs:FareTransferRule rdfs:label "Regra de Transferência de Tarifa"@pt ;
+    rdfs:comment "Regras para custos de tarifa ao transferir entre pernas."@pt .
+
+gtfs:transfer_count rdfs:label "contagem_transferencias"@pt ;
+    rdfs:comment "Número de transferências permitidas."@pt .
+
+gtfs:duration_limit rdfs:label "limite_duracao"@pt ;
+    rdfs:comment "Limite de tempo para a transferência."@pt .
+
+gtfs:duration_limit_type rdfs:label "tipo_limite_duracao"@pt ;
+    rdfs:comment "Tipo de limite de duração."@pt .
+
+gtfs:fare_transfer_type rdfs:label "tipo_transferencia_tarifa"@pt ;
+    rdfs:comment "Lógica para calcular o custo da transferência."@pt .
+
+gtfs:rider_category rdfs:label "categoria_passageiro"@pt ;
+    rdfs:comment "Categoria de passageiro elegível para este produto."@pt .
+
+gtfs:fare_media rdfs:label "midia_tarifa"@pt ;
+    rdfs:comment "Mídia de tarifa necessária para este produto."@pt .
+
+gtfs:fare_product rdfs:label "produto_tarifario"@pt ;
+    rdfs:comment "O produto tarifário associado a esta regra."@pt .
+
+gtfs:from_area rdfs:label "area_origem"@pt ;
+    rdfs:comment "A área de origem."@pt .
+
+gtfs:to_area rdfs:label "area_destino"@pt ;
+    rdfs:comment "A área de destino."@pt .
+
+gtfs:from_timeframe rdfs:label "marco_tempo_origem"@pt ;
+    rdfs:comment "O marco de tempo inicial."@pt .
+
+gtfs:to_timeframe rdfs:label "marco_tempo_destino"@pt ;
+    rdfs:comment "O marco de tempo final."@pt .
+
+gtfs:Area rdfs:label "Área"@pt ;
+    rdfs:comment "Define um grupo de paradas ou locais válidos para cálculos de tarifa."@pt .
+
+gtfs:StopArea rdfs:label "Área de Parada"@pt ;
+    rdfs:comment "Atribui paradas a áreas."@pt .
+
+gtfs:area_id rdfs:label "id_area"@pt ;
+    rdfs:comment "Identifica uma área."@pt .
+
+gtfs:area_name rdfs:label "nome_area"@pt ;
+    rdfs:comment "Nome da área."@pt .
+
+gtfs:Network rdfs:label "Rede"@pt ;
+    rdfs:comment "Define um identificador de rede."@pt .
+
+gtfs:network_name rdfs:label "nome_rede"@pt ;
+    rdfs:comment "Nome da rede."@pt .
+
+gtfs:RouteNetwork rdfs:label "Rede de Rota"@pt ;
+    rdfs:comment "Associa rotas a redes."@pt .
+
+gtfs:network rdfs:label "rede"@pt ;
+    rdfs:comment "A rede associada a esta rota."@pt .
+
+gtfs:Shape rdfs:label "Forma"@pt ;
+    rdfs:comment "Define o trajeto do veículo para uma viagem."@pt .
+
+gtfs:shape_pt_lat rdfs:label "latitude_ponto_forma"@pt ;
+    rdfs:comment "Latitude de um ponto da forma."@pt .
+
+gtfs:shape_pt_lon rdfs:label "longitude_ponto_forma"@pt ;
+    rdfs:comment "Longitude de um ponto da forma."@pt .
+
+gtfs:shape_pt_sequence rdfs:label "sequencia_ponto_forma"@pt ;
+    rdfs:comment "Sequência do ponto ao longo da forma."@pt .
+
+gtfs:area rdfs:label "area"@pt ;
+    rdfs:comment "A área associada a esta parada ou regra."@pt .
+
+gtfs:Frequency rdfs:label "Frequência"@pt ;
+    rdfs:comment "Representa viagens que operam em intervalos regulares."@pt .
+
+gtfs:headway_secs rdfs:label "segundos_intervalo"@pt ;
+    rdfs:comment "Tempo em segundos entre duas partidas de veículos."@pt .
+
+gtfs:exact_times rdfs:label "horarios_exatos"@pt ;
+    rdfs:comment "Indica se as viagens baseadas em frequência seguem um horário fixo."@pt .
+
+gtfs:Transfer rdfs:label "Transferência"@pt ;
+    rdfs:comment "Regras para fazer conexões em pontos de transferência entre rotas."@pt .
+
+gtfs:from_stop_id rdfs:label "id_parada_origem"@pt ;
+    rdfs:comment "A parada de onde a transferência começa."@pt .
+
+gtfs:to_stop_id rdfs:label "id_parada_destino"@pt ;
+    rdfs:comment "A parada onde a transferência termina."@pt .
+
+gtfs:transfer_type rdfs:label "tipo_transferencia"@pt ;
+    rdfs:comment "Tipo da transferência (por exemplo, Recomendada, Programada, Requer tempo mínimo)."@pt .
+
+gtfs:min_transfer_time rdfs:label "tempo_minimo_transferencia"@pt ;
+    rdfs:comment "Tempo mínimo necessário para transferir entre paradas."@pt .
+
+gtfs:from_route_id rdfs:label "id_rota_origem"@pt ;
+    rdfs:comment "A rota de onde a transferência começa."@pt .
+
+gtfs:to_route_id rdfs:label "id_rota_destino"@pt ;
+    rdfs:comment "A rota onde a transferência termina."@pt .
+
+gtfs:from_trip_id rdfs:label "id_viagem_origem"@pt ;
+    rdfs:comment "A viagem de onde a transferência começa."@pt .
+
+gtfs:to_trip_id rdfs:label "id_viagem_destino"@pt ;
+    rdfs:comment "A viagem onde a transferência termina."@pt .
+
+gtfs:Pathway rdfs:label "Caminho"@pt ;
+    rdfs:comment "Um caminho identificando uma conexão específica entre nós em uma estação."@pt .
+
+gtfs:pathway_id rdfs:label "id_caminho"@pt ;
+    rdfs:comment "Identifica um caminho."@pt .
+
+gtfs:pathway_mode rdfs:label "modo_caminho"@pt ;
+    rdfs:comment "Tipo de caminho (por exemplo, passarela, escadas, elevador)."@pt .
+
+gtfs:is_bidirectional rdfs:label "eh_bidirecional"@pt ;
+    rdfs:comment "Indica se o caminho pode ser usado em ambas as direções."@pt .
+
+gtfs:length rdfs:label "comprimento"@pt ;
+    rdfs:comment "Comprimento horizontal do caminho em metros."@pt .
+
+gtfs:traversal_time rdfs:label "tempo_travessia"@pt ;
+    rdfs:comment "Tempo médio para percorrer o caminho em segundos."@pt .
+
+gtfs:stair_count rdfs:label "contagem_degraus"@pt ;
+    rdfs:comment "Número de degraus."@pt .
+
+gtfs:max_slope rdfs:label "inclinacao_maxima"@pt ;
+    rdfs:comment "Razão de inclinação máxima do caminho."@pt .
+
+gtfs:min_width rdfs:label "largura_minima"@pt ;
+    rdfs:comment "Largura mínima do caminho em metros."@pt .
+
+gtfs:signposted_as rdfs:label "sinalizado_como"@pt ;
+    rdfs:comment "Texto exibido na sinalização física."@pt .
+
+gtfs:reversed_signposted_as rdfs:label "sinalizado_invertido_como"@pt ;
+    rdfs:comment "Texto exibido na sinalização na direção inversa."@pt .
+
+gtfs:Level rdfs:label "Nível"@pt ;
+    rdfs:comment "Descreve um nível dentro de uma estação."@pt .
+
+gtfs:level_index rdfs:label "indice_nivel"@pt ;
+    rdfs:comment "Índice numérico do nível (por exemplo, 1 para térreo, -1 para subsolo)."@pt .
+
+gtfs:level_name rdfs:label "nome_nivel"@pt ;
+    rdfs:comment "Nome do nível."@pt .
+
+gtfs:from_stop rdfs:label "parada_origem"@pt ;
+    rdfs:comment "A parada onde a transferência se origina."@pt .
+
+gtfs:to_stop rdfs:label "parada_destino"@pt ;
+    rdfs:comment "A parada onde a transferência termina."@pt .
+
+gtfs:from_route rdfs:label "rota_origem"@pt ;
+    rdfs:comment "A rota onde a transferência se origina."@pt .
+
+gtfs:to_route rdfs:label "rota_destino"@pt ;
+    rdfs:comment "A rota onde a transferência termina."@pt .
+
+gtfs:from_trip rdfs:label "viagem_origem"@pt ;
+    rdfs:comment "A viagem onde a transferência se origina."@pt .
+
+gtfs:to_trip rdfs:label "viagem_destino"@pt ;
+    rdfs:comment "A viagem onde a transferência termina."@pt .
+
+gtfs:level rdfs:label "nivel"@pt ;
+    rdfs:comment "O nível onde esta parada está localizada."@pt .
+
+gtfs:LocationGroup rdfs:label "Grupo de Localização"@pt ;
+    rdfs:comment "Um grupo de paradas onde um passageiro pode solicitar embarque ou desembarque."@pt .
+
+gtfs:GeoJsonLocation rdfs:label "Localização GeoJSON"@pt ;
+    rdfs:comment "Uma zona definida por polígono GeoJSON."@pt .
+
+gtfs:BookingRule rdfs:label "Regra de Agendamento"@pt ;
+    rdfs:comment "Regras para serviços solicitados pelo passageiro."@pt .
+
+gtfs:FeedInfo rdfs:label "Informações do Feed"@pt ;
+    rdfs:comment "Informações sobre o próprio conjunto de dados."@pt .
+
+gtfs:Attribution rdfs:label "Atribuição"@pt ;
+    rdfs:comment "Atribuição para o conjunto de dados ou um subconjunto."@pt .
+
+gtfs:Translation rdfs:label "Tradução"@pt ;
+    rdfs:comment "Fornece traduções de campos."@pt .
+
+gtfs:location_group_id rdfs:label "id_grupo_localizacao"@pt ;
+    rdfs:comment "Identifica um grupo de localização."@pt .
+
+gtfs:location_group_name rdfs:label "nome_grupo_localizacao"@pt ;
+    rdfs:comment "Nome do grupo de localização."@pt .
+
+gtfs:booking_rule_id rdfs:label "id_regra_agendamento"@pt ;
+    rdfs:comment "Identifica uma regra de agendamento."@pt .
+
+gtfs:booking_type rdfs:label "tipo_agendamento"@pt ;
+    rdfs:comment "Indica com que antecedência o agendamento pode ser feito."@pt .
+
+gtfs:feed_publisher_name rdfs:label "nome_editor_feed"@pt ;
+    rdfs:comment "Nome completo da organização que publica o conjunto de dados."@pt .
+
+gtfs:feed_publisher_url rdfs:label "url_editor_feed"@pt ;
+    rdfs:comment "URL da organização editora do conjunto de dados."@pt .
+
+gtfs:feed_lang rdfs:label "idioma_feed"@pt ;
+    rdfs:comment "Idioma padrão do conjunto de dados."@pt .
+
+gtfs:organization_name rdfs:label "nome_organizacao"@pt ;
+    rdfs:comment "Nome da organização atribuída."@pt .
+
+gtfs:table_name rdfs:label "nome_tabela"@pt ;
+    rdfs:comment "A tabela contendo o campo a ser traduzido."@pt .
+
+gtfs:field_name rdfs:label "nome_campo"@pt ;
+    rdfs:comment "O campo a ser traduzido."@pt .
+
+gtfs:language rdfs:label "idioma"@pt ;
+    rdfs:comment "O idioma da tradução."@pt .
+
+gtfs:translation rdfs:label "traducao"@pt ;
+    rdfs:comment "O valor traduzido."@pt .
+
+gtfs:pickup_booking_rule rdfs:label "regra_agendamento_embarque"@pt ;
+    rdfs:comment "Regra de agendamento para embarque."@pt .
+
+gtfs:drop_off_booking_rule rdfs:label "regra_agendamento_desembarque"@pt ;
+    rdfs:comment "Regra de agendamento para desembarque."@pt .
+
+gtfs:location_group rdfs:label "grupo_localizacao"@pt ;
+    rdfs:comment "O grupo de localização para este horário de parada."@pt .
+
+gtfs:location rdfs:label "localizacao"@pt ;
+    rdfs:comment "A localização GeoJSON para este horário de parada."@pt .

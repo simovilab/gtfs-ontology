@@ -8,7 +8,8 @@ from ontospy.gendocs.viz.viz_html_multi import KompleteVizMultiModel
 ontology_files = [
     "ontologies/schedule.ttl",
     "ontologies/i18n/en.ttl",
-    "ontologies/i18n/es.ttl"
+    "ontologies/i18n/es.ttl",
+    "ontologies/i18n/pt.ttl"
 ]
 
 # Ensure docs directory exists
