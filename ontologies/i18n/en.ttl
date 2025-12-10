@@ -1,4 +1,4 @@
-@prefix gtfs: <http://vocab.gtfs.org/terms#> .
+@prefix gtfs: <http://ontology.gtfs.org/reference#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 gtfs:Agency rdfs:label "Agency"@en ;

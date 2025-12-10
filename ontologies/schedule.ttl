@@ -1,4 +1,4 @@
-@prefix gtfs: <http://vocab.gtfs.org/terms#> .
+@prefix gtfs: <http://ontology.gtfs.org/reference#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -6,7 +6,7 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 
-<http://vocab.gtfs.org/terms#> a owl:Ontology ;
+<http://ontology.gtfs.org/reference#> a owl:Ontology ;
     dct:title "GTFS Ontology" ;
     dct:description "An ontology for the General Transit Feed Specification (GTFS)." .
 
