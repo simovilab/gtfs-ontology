@@ -38,9 +38,11 @@ A comprehensive project for the [General Transit Feed Specification (GTFS)](http
 │       ├── en.ttl
 │       ├── es.ttl
 │       └── pt.ttl
-├── yaml/               # Structured YAML reference
-│   ├── schedule.yaml   # GTFS Schedule Reference (YAML format)
-│   └── schedule.schema.json  # JSON Schema for validation
+├── serializers/        # Reference (YAML/JSON) and converters
+│   ├── schedule.yaml         # GTFS Schedule Reference (YAML)
+│   ├── schedule.schema.json  # JSON Schema for validation
+│   ├── schedule.json         # JSON representation (generated)
+│   └── yaml2json.py          # Converter script (YAML to JSON)
 ├── main.py             # Script to generate documentation
 └── README.md
 ```
@@ -51,21 +53,27 @@ A comprehensive project for the [General Transit Feed Specification (GTFS)](http
 
 - [Python 3.12+](https://www.python.org/) & [uv](https://github.com/astral-sh/uv) (for generating docs)
 
-### Using the YAML Reference
+### Using the YAML/JSON Reference
 
-The YAML reference provides a structured, machine-readable format of the GTFS Schedule specification:
+The YAML/JSON reference provides a structured, machine-readable format of the GTFS Schedule specification:
 
 ```bash
-# View the complete reference
-cat yaml/schedule.yaml
+# View the YAML reference
+cat serializers/schedule.yaml
+
+# Convert YAML ➜ JSON (overwrites serializers/schedule.json)
+uv run ./serializers/yaml2json.py
+
+# View the JSON output
+cat serializers/schedule.json
 
 # Validate against the JSON Schema (requires a JSON Schema validator)
 # Example using ajv-cli:
 npm install -g ajv-cli
-ajv validate -s yaml/schedule.schema.json -d yaml/schedule.yaml
+ajv validate -s serializers/schedule.schema.json -d serializers/schedule.json
 ```
 
-The YAML reference includes:
+The reference includes:
 
 - **Document Conventions**: RFC 2119 keywords, term definitions, presence conditions, field types
 - **Dataset Files**: All 33 GTFS files with presence requirements
@@ -107,8 +115,14 @@ We use [Ontospy](https://github.com/lambdamusic/Ontospy) to generate static HTML
 - Edit `ontology/schedule.ttl` to add classes, properties, or SHACL shapes
 - Verify changes by regenerating documentation
 
-### Updating the YAML Reference
+### Updating the YAML/JSON Reference
 
-- Edit `yaml/schedule.yaml` to add or modify field definitions
-- Update `yaml/schedule.schema.json` if structural changes are made
+- Edit `serializers/schedule.yaml` to add or modify field definitions
+- Update `serializers/schedule.schema.json` if structural changes are made
+- Regenerate the JSON with:
+
+  ```bash
+  uv run ./serializers/yaml2json.py
+  ```
+
 - Ensure consistency with the source markdown in `assets/schedule.md`
