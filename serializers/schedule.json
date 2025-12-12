@@ -1,0 +1,697 @@
+{
+  "name": "General Transit Feed Specification Reference",
+  "revision": "2025-10-28",
+  "revision_history_url": "https://gtfs.org/documentation/schedule/change-history/revision-history",
+  "description": "This document defines the format and structure of the files that comprise a GTFS dataset.",
+  "document_conventions": {
+    "description": "The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as described in RFC 2119.",
+    "term_definitions": {
+      "description": "This section defines terms that are used throughout this document.",
+      "terms": [
+        {
+          "term": "Dataset",
+          "definition": "A complete set of files defined by this specification reference. Altering the dataset creates a new version of the dataset. Datasets should be published at a public, permanent URL, including the zip file name. (e.g., https://www.agency.org/gtfs/gtfs.zip)."
+        },
+        {
+          "term": "Record",
+          "definition": "A basic data structure comprised of a number of different field values describing a single entity (e.g. transit agency, stop, route, etc.). Represented, in a table, as a row."
+        },
+        {
+          "term": "Field",
+          "definition": "A property of an object or entity. Represented, in a table, as a column. The field exists if added in a file as a header. It may or may not have field values defined."
+        },
+        {
+          "term": "Field value",
+          "definition": "An individual entry in a field. Represented, in a table, as a single cell."
+        },
+        {
+          "term": "Service day",
+          "definition": "A service day is a time period used to indicate route scheduling. The exact definition of service day varies from agency to agency but service days often do not correspond with calendar days. A service day may exceed 24:00:00 if service begins on one day and ends on a following day. For example, service that runs from 08:00:00 on Friday to 02:00:00 on Saturday, could be denoted as running from 08:00:00 to 26:00:00 on a single service day."
+        },
+        {
+          "term": "Text-to-speech field",
+          "definition": "The field should contain the same information than its parent field (on which it falls back if it is empty). It is aimed to be read as text-to-speech, therefore, abbreviation should be either removed (\"St\" should be either read as \"Street\" or \"Saint\"; \"Elizabeth I\" should be \"Elizabeth the first\") or kept to be read as it (\"JFK Airport\" is said abbreviated)."
+        },
+        {
+          "term": "Leg",
+          "definition": "Travel in which a rider boards and alights between a pair of subsequent locations along a trip."
+        },
+        {
+          "term": "Journey",
+          "definition": "Overall travel from origin to destination, including all legs and transfers in-between."
+        },
+        {
+          "term": "Sub-journey",
+          "definition": "Two or more legs that comprise a subset of a journey."
+        },
+        {
+          "term": "Fare product",
+          "definition": "Purchassable fare products that can be used to pay for or validate travel."
+        },
+        {
+          "term": "Effective Fare Leg",
+          "definition": "A sub-journey of two or more legs that should be treated as a single leg for matching rules in fare_leg_rules.txt for the purposes of fare calculation."
+        }
+      ]
+    },
+    "presence": {
+      "description": "Presence conditions applicable to fields and files.",
+      "conditions": [
+        {
+          "name": "Required",
+          "definition": "The field or file must be included in the dataset and contain a valid value for each record."
+        },
+        {
+          "name": "Optional",
+          "definition": "The field or file may be omitted from the dataset."
+        },
+        {
+          "name": "Conditionally Required",
+          "definition": "The field or file must be included under conditions outlined in the field or file description."
+        },
+        {
+          "name": "Conditionally Forbidden",
+          "definition": "The field or file must not be included under conditions outlined in the field or file description."
+        },
+        {
+          "name": "Recommended",
+          "definition": "The field or file may be omitted from the dataset, but it is a best practice to include it. Before omitting this field or file, the best practice should be carefully evaluated and the full implications of omission should be understood."
+        }
+      ]
+    },
+    "field_types": {
+      "description": "Field types applicable to fields.",
+      "types": [
+        {
+          "name": "Color",
+          "definition": "A color encoded as a six-digit hexadecimal number. Refer to https://htmlcolorcodes.com to generate a valid value (the leading \"#\" must not be included)."
+        },
+        {
+          "name": "Currency code",
+          "definition": "An ISO 4217 alphabetical currency code. For the list of current currency, refer to https://en.wikipedia.org/wiki/ISO_4217#Active_codes."
+        },
+        {
+          "name": "Currency amount",
+          "definition": "A decimal value indicating a currency amount. The number of decimal places is specified by ISO 4217 for the accompanying Currency code. All financial calculations should be processed as decimal, currency, or another equivalent type suitable for financial calculations depending on the programming language used to consume data. Processing currency amounts as float is discouraged due to gains or losses of money during calculations."
+        },
+        {
+          "name": "Date",
+          "definition": "Service day in the YYYYMMDD format. Since time within a service day may be above 24:00:00, a service day may contain information for the subsequent day(s)."
+        },
+        {
+          "name": "Email",
+          "definition": "An email address."
+        },
+        {
+          "name": "Enum",
+          "definition": "An option from a set of predefined constants defined in the Description column."
+        },
+        {
+          "name": "ID",
+          "definition": "An ID field value is an internal ID, not intended to be shown to riders, and is a sequence of any UTF-8 characters. Using only printable ASCII characters is recommended. An ID is labeled \"unique ID\" when it must be unique within a file. IDs defined in one .txt file are often referenced in another .txt file. IDs that reference an ID in another table are labeled \"foreign ID\"."
+        },
+        {
+          "name": "Language code",
+          "definition": "An IETF BCP 47 language code. For an introduction to IETF BCP 47, refer to http://www.rfc-editor.org/rfc/bcp/bcp47.txt and http://www.w3.org/International/articles/language-tags/."
+        },
+        {
+          "name": "Latitude",
+          "definition": "WGS84 latitude in decimal degrees. The value must be greater than or equal to -90.0 and less than or equal to 90.0."
+        },
+        {
+          "name": "Longitude",
+          "definition": "WGS84 longitude in decimal degrees. The value must be greater than or equal to -180.0 and less than or equal to 180.0."
+        },
+        {
+          "name": "Float",
+          "definition": "A floating point number."
+        },
+        {
+          "name": "Integer",
+          "definition": "An integer."
+        },
+        {
+          "name": "Phone number",
+          "definition": "A phone number."
+        },
+        {
+          "name": "Time",
+          "definition": "Time in the HH:MM:SS format (H:MM:SS is also accepted). The time is measured from \"noon minus 12h\" of the service day (effectively midnight except for days on which daylight savings time changes occur). For times occurring after midnight on the service day, enter the time as a value greater than 24:00:00 in HH:MM:SS."
+        },
+        {
+          "name": "Local time",
+          "definition": "Time in the HH:MM:SS format (H:MM:SS is also accepted). Represents a wall-clock time shown in the local time of the specified location."
+        },
+        {
+          "name": "Text",
+          "definition": "A string of UTF-8 characters, which is aimed to be displayed and which must therefore be human readable."
+        },
+        {
+          "name": "Timezone",
+          "definition": "TZ timezone from the https://www.iana.org/time-zones. Timezone names never contain the space character but may contain an underscore. Refer to http://en.wikipedia.org/wiki/List_of_tz_zones for a list of valid values."
+        },
+        {
+          "name": "URL",
+          "definition": "A fully qualified URL that includes http:// or https://, and any special characters in the URL must be correctly escaped. See the following http://www.w3.org/Addressing/URL/4_URI_Recommentations.html for a description of how to create fully qualified URL values."
+        }
+      ]
+    },
+    "field_signs": {
+      "description": "Signs applicable to Float or Integer field types.",
+      "signs": [
+        {
+          "name": "Non-negative",
+          "definition": "Greater than or equal to 0."
+        },
+        {
+          "name": "Non-zero",
+          "definition": "Not equal to 0."
+        },
+        {
+          "name": "Positive",
+          "definition": "Greater than 0."
+        }
+      ],
+      "example": "Non-negative float: A floating point number greater than or equal to 0."
+    },
+    "dataset_attributes": {
+      "description": "Attributes that apply to the entire dataset.",
+      "attributes": [
+        {
+          "name": "Primary key",
+          "definition": "The primary key of a dataset is the field or combination of fields that uniquely identify a row. Primary key (*) is used when all provided fields for a file are used to uniquely identify a row. Primary key (none) means that the file allows only one row.",
+          "example": "The trip_id and stop_sequence fields make the primary key of stop_times.txt."
+        }
+      ]
+    }
+  },
+  "dataset_files": {
+    "description": "This specification defines the following files.",
+    "files": [
+      {
+        "name": "agency.txt",
+        "presence": "Required",
+        "description": "Transit agencies with service represented in this dataset."
+      },
+      {
+        "name": "stops.txt",
+        "presence": "Conditionally Required",
+        "description": "Stops where vehicles pick up or drop off riders. Also defines stations and station entrances.",
+        "conditions": "Conditionally Required: Optional if demand-responsive zones are defined in locations.geojson. Required otherwise."
+      },
+      {
+        "name": "routes.txt",
+        "presence": "Required",
+        "description": "Transit routes. A route is a group of trips that are displayed to riders as a single service."
+      },
+      {
+        "name": "trips.txt",
+        "presence": "Required",
+        "description": "Trips for each route. A trip is a sequence of two or more stops that occur during a specific time period."
+      },
+      {
+        "name": "stop_times.txt",
+        "presence": "Required",
+        "description": "Times that a vehicle arrives at and departs from stops for each trip."
+      },
+      {
+        "name": "calendar.txt",
+        "presence": "Conditionally Required",
+        "description": "Service dates specified using a weekly schedule with start and end dates.",
+        "conditions": "Conditionally Required: Required unless all dates of service are defined in calendar_dates.txt. Optional otherwise."
+      },
+      {
+        "name": "calendar_dates.txt",
+        "presence": "Conditionally Required",
+        "description": "Exceptions for the services defined in the calendar.txt.",
+        "conditions": "Conditionally Required: Required if calendar.txt is omitted. In which case calendar_dates.txt must contain all dates of service. Optional otherwise."
+      },
+      {
+        "name": "fare_attributes.txt",
+        "presence": "Optional",
+        "description": "Fare information for a transit agency's routes."
+      },
+      {
+        "name": "fare_rules.txt",
+        "presence": "Optional",
+        "description": "Rules to apply fares for itineraries."
+      },
+      {
+        "name": "timeframes.txt",
+        "presence": "Optional",
+        "description": "Date and time periods to use in fare rules for fares that depend on date and time factors."
+      },
+      {
+        "name": "rider_categories.txt",
+        "presence": "Optional",
+        "description": "Defines categories of riders (e.g. elderly, student)."
+      },
+      {
+        "name": "fare_media.txt",
+        "presence": "Optional",
+        "description": "To describe the fare media that can be employed to use fare products.",
+        "notes": "File fare_media.txt describes concepts that are not represented in fare_attributes.txt and fare_rules.txt. As such, the use of fare_media.txt is entirely separate from files fare_attributes.txt and fare_rules.txt."
+      },
+      {
+        "name": "fare_products.txt",
+        "presence": "Optional",
+        "description": "To describe the different types of tickets or fares that can be purchased by riders.",
+        "notes": "File fare_products.txt describes fare products that are not represented in fare_attributes.txt and fare_rules.txt. As such, the use of fare_products.txt is entirely separate from files fare_attributes.txt and fare_rules.txt."
+      },
+      {
+        "name": "fare_leg_rules.txt",
+        "presence": "Optional",
+        "description": "Fare rules for individual legs of travel.",
+        "notes": "File fare_leg_rules.txt provides a more detailed method for modeling fare structures. As such, the use of fare_leg_rules.txt is entirely separate from files fare_attributes.txt and fare_rules.txt."
+      },
+      {
+        "name": "fare_leg_join_rules.txt",
+        "presence": "Optional",
+        "description": "Rules for defining two or more legs should be considered as a single effective fare leg for the purposes of matching against rules in fare_leg_rules.txt"
+      },
+      {
+        "name": "fare_transfer_rules.txt",
+        "presence": "Optional",
+        "description": "Fare rules for transfers between legs of travel.",
+        "notes": "Along with fare_leg_rules.txt, file fare_transfer_rules.txt provides a more detailed method for modeling fare structures. As such, the use of fare_transfer_rules.txt is entirely separate from files fare_attributes.txt and fare_rules.txt."
+      },
+      {
+        "name": "areas.txt",
+        "presence": "Optional",
+        "description": "Area grouping of locations."
+      },
+      {
+        "name": "stop_areas.txt",
+        "presence": "Optional",
+        "description": "Rules to assign stops to areas."
+      },
+      {
+        "name": "networks.txt",
+        "presence": "Conditionally Forbidden",
+        "description": "Network grouping of routes.",
+        "conditions": "Conditionally Forbidden: Forbidden if network_id exists in routes.txt. Optional otherwise."
+      },
+      {
+        "name": "route_networks.txt",
+        "presence": "Conditionally Forbidden",
+        "description": "Rules to assign routes to networks.",
+        "conditions": "Conditionally Forbidden: Forbidden if network_id exists in routes.txt. Optional otherwise."
+      },
+      {
+        "name": "shapes.txt",
+        "presence": "Optional",
+        "description": "Rules for mapping vehicle travel paths, sometimes referred to as route alignments."
+      },
+      {
+        "name": "frequencies.txt",
+        "presence": "Optional",
+        "description": "Headway (time between trips) for headway-based service or a compressed representation of fixed-schedule service."
+      },
+      {
+        "name": "transfers.txt",
+        "presence": "Optional",
+        "description": "Rules for making connections at transfer points between routes."
+      },
+      {
+        "name": "pathways.txt",
+        "presence": "Optional",
+        "description": "Pathways linking together locations within stations."
+      },
+      {
+        "name": "levels.txt",
+        "presence": "Conditionally Required",
+        "description": "Levels within stations.",
+        "conditions": "Conditionally Required: Required when describing pathways with elevators (pathway_mode=5). Optional otherwise."
+      },
+      {
+        "name": "location_groups.txt",
+        "presence": "Optional",
+        "description": "A group of stops that together indicate locations where a rider may request pickup or drop off."
+      },
+      {
+        "name": "location_group_stops.txt",
+        "presence": "Optional",
+        "description": "Rules to assign stops to location groups."
+      },
+      {
+        "name": "locations.geojson",
+        "presence": "Optional",
+        "description": "Zones for rider pickup or drop-off requests by on-demand services, represented as GeoJSON polygons."
+      },
+      {
+        "name": "booking_rules.txt",
+        "presence": "Optional",
+        "description": "Booking information for rider-requested services."
+      },
+      {
+        "name": "translations.txt",
+        "presence": "Optional",
+        "description": "Translations of customer-facing dataset values."
+      },
+      {
+        "name": "feed_info.txt",
+        "presence": "Conditionally Required",
+        "description": "Dataset metadata, including publisher, version, and expiration information.",
+        "conditions": "Conditionally Required: Required if translations.txt is provided. Recommended otherwise."
+      },
+      {
+        "name": "attributions.txt",
+        "presence": "Optional",
+        "description": "Dataset attributions."
+      }
+    ]
+  },
+  "file_requirements": {
+    "description": "The following requirements apply to the format and contents of the dataset files.",
+    "requirements": [
+      "All files must be saved as comma-delimited text.",
+      "The first line of each file must contain field names. Each subsection of the Field Definitions section corresponds to one of the files in a GTFS dataset and lists the field names that may be used in that file.",
+      "All file and field names are case-sensitive.",
+      "Field values must not contain tabs, carriage returns or new lines.",
+      "Field values that contain quotation marks or commas must be enclosed within quotation marks. In addition, each quotation mark in the field value must be preceded with a quotation mark. This is consistent with the manner in which Microsoft Excel outputs comma-delimited (CSV) files. For more information on the CSV file format, see http://tools.ietf.org/html/rfc4180.",
+      "Field values must not contain HTML tags, comments or escape sequences.",
+      "Extra spaces between fields or field names should be removed. Many parsers consider the spaces to be part of the value, which may cause errors.",
+      "Each line must end with a CRLF or LF linebreak character.",
+      "Files should be encoded in UTF-8 to support all Unicode characters. Files that include the Unicode byte-order mark (BOM) character are acceptable. See http://unicode.org/faq/utf_bom.html#BOM for more information on the BOM character and UTF-8.",
+      "All dataset files must be zipped together. The files must reside at the root level directly, not in a subfolder.",
+      "All customer-facing text strings (including stop names, route names, and headsigns) should use Mixed Case (not ALL CAPS), following local conventions for capitalization of place names on displays capable of displaying lower case characters (e.g. \"Brighton Churchill Square\", \"Villiers-sur-Marne\", \"Market Street\").",
+      "The use of abbreviations should be avoided throughout the feed for names and other text (e.g. St. for Street) unless a location is called by its abbreviated name (e.g. \"JFK Airport\"). Abbreviations may be problematic for accessibility by screen reader software and voice user interfaces. Consuming software can be engineered to reliably convert full words to abbreviations for display, but converting from abbreviations to full words is prone to more risk of error."
+    ],
+    "csv_example": {
+      "original_value": "Contains \"quotes\", commas and text",
+      "csv_value": "\"Contains \"\"quotes\"\", commas and text\""
+    }
+  },
+  "dataset_publishing_general_practices": {
+    "description": "General practices for publishing a GTFS dataset.",
+    "practices": [
+      "Datasets should be published at a public, permanent URL, including the zip file name. (e.g., www.agency.org/gtfs/gtfs.zip). Ideally, the URL should be directly downloadable without requiring login to access the file, to facilitate download by consuming software applications. While it is recommended (and the most common practice) to make a GTFS dataset openly downloadable, if a data provider does need to control access to GTFS for licensing or other reasons, it is recommended to control access to the GTFS dataset using API keys, which will facilitate automatic downloads.",
+      "GTFS data should be published in iterations so that a single file at a stable location always contains the latest official description of service for a transit agency (or agencies).",
+      "Datasets should maintain persistent identifiers (id fields) for stop_id, route_id, and agency_id across data iterations whenever possible.",
+      "One GTFS dataset should contain current and upcoming service (sometimes called a \"merged\" dataset). There are multiple merge tools available that can be used to create a merged dataset from two different GTFS feeds.",
+      "At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.",
+      "If possible, the GTFS dataset should cover at least the next 30 days of service.",
+      "Old services (expired calendars) should be removed from the feed.",
+      "If a service modification will go into effect in 7 days or fewer, this service change should be expressed through a GTFS-realtime feed (service advisories or trip updates) rather than static GTFS dataset.",
+      "The web-server hosting GTFS data should be configured to correctly report the file modification date (see HTTP/1.1 - Request for Comments 2616, under Section 14.29)."
+    ]
+  },
+  "field_definitions": {
+    "description": "This section defines the fields that may be used in each file of a GTFS dataset.",
+    "files": [
+      {
+        "file": "agency.txt",
+        "presence": "Required",
+        "primary_key": "agency_id",
+        "fields": [
+          {
+            "name": "agency_id",
+            "type": "Unique ID",
+            "presence": "Conditionally Required",
+            "description": "Identifies a transit brand which is often synonymous with a transit agency. Note that in some cases, such as when a single agency operates multiple separate services, agencies and brands are distinct. This document uses the term \"agency\" in place of \"brand\". A dataset may contain data from multiple agencies.",
+            "conditions": [
+              "Required when the dataset contains data for multiple transit agencies.",
+              "Recommended otherwise."
+            ]
+          },
+          {
+            "name": "agency_name",
+            "type": "Text",
+            "presence": "Required",
+            "description": "Full name of the transit agency."
+          },
+          {
+            "name": "agency_url",
+            "type": "URL",
+            "presence": "Required",
+            "description": "URL of the transit agency."
+          },
+          {
+            "name": "agency_timezone",
+            "type": "Timezone",
+            "presence": "Required",
+            "description": "Timezone where the transit agency is located. If multiple agencies are specified in the dataset, each must have the same agency_timezone."
+          },
+          {
+            "name": "agency_lang",
+            "type": "Language code",
+            "presence": "Optional",
+            "description": "Primary language used by this transit agency. Should be provided to help GTFS consumers choose capitalization rules and other language-specific settings for the dataset."
+          },
+          {
+            "name": "agency_phone",
+            "type": "Phone number",
+            "presence": "Optional",
+            "description": "A voice telephone number for the specified agency. This field is a string value that presents the telephone number as typical for the agency's service area. It may contain punctuation marks to group the digits of the number. Dialable text (for example, TriMet's \"503-238-RIDE\") is permitted, but the field must not contain any other descriptive text."
+          },
+          {
+            "name": "agency_fare_url",
+            "type": "URL",
+            "presence": "Optional",
+            "description": "URL of a web page where a rider can purchase tickets or other fare instruments for that agency, or a web page containing information about that agency's fares."
+          },
+          {
+            "name": "agency_email",
+            "type": "Email",
+            "presence": "Optional",
+            "description": "Email address actively monitored by the agency's customer service department. This email address should be a direct contact point where transit riders can reach a customer service representative at the agency."
+          },
+          {
+            "name": "cemv_support",
+            "type": "Enum",
+            "presence": "Optional",
+            "description": "Indicates if riders can access a transit service (i.e., trip) associated with this agency by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this agency are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support.",
+            "options": [
+              {
+                "value": "0 or empty",
+                "description": "No cEMV information for trips associated with this agency."
+              },
+              {
+                "value": "1",
+                "description": "Riders may use cEMVs as fare media for trips associated with this agency."
+              },
+              {
+                "value": "2",
+                "description": "cEMVs are not supported as fare media for trips associated with this agency."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "file": "stops.txt",
+        "presence": "Conditionally Required",
+        "primary_key": "stop_id",
+        "fields": [
+          {
+            "name": "stop_id",
+            "type": "Unique ID",
+            "presence": "Required",
+            "description": "Identifies a location: stop/platform, station, entrance/exit, generic node or boarding area (see location_type).",
+            "comments": [
+              "ID must be unique across all stops.stop_id, locations.geojson id, and location_groups.location_group_id values.",
+              "Multiple routes may use the same stop_id."
+            ]
+          },
+          {
+            "name": "stop_code",
+            "type": "Text",
+            "presence": "Optional",
+            "description": "Short text or a number that identifies the location for riders. These codes are often used in phone-based transit information systems or printed on signage to make it easier for riders to get information for a particular location. The stop_code may be the same as stop_id if it is public facing. This field should be left empty for locations without a code presented to riders."
+          },
+          {
+            "name": "stop_name",
+            "type": "Text",
+            "presence": "Conditionally Required",
+            "description": "Name of the location. The stop_name should match the agency's rider-facing name for the location as printed on a timetable, published online, or represented on signage. For translations into other languages, use translations.txt. When the location is a boarding area (location_type=4), the stop_name should contains the name of the boarding area as displayed by the agency. It could be just one letter (like on some European intercity railway stations), or text like \"Wheelchair boarding area\" (NYC's Subway) or \"Head of short trains\" (Paris' RER).",
+            "conditions": [
+              "Required for locations which are stops (location_type=0), stations (location_type=1) or entrances/exits (location_type=2).",
+              "Optional for locations which are generic nodes (location_type=3) or boarding areas (location_type=4)."
+            ]
+          },
+          {
+            "name": "tts_stop_name",
+            "type": "Text",
+            "presence": "Optional",
+            "description": "Readable version of the stop_name. See \"Text-to-speech field\" in the Term Definitions for more."
+          },
+          {
+            "name": "stop_desc",
+            "type": "Text",
+            "presence": "Optional",
+            "description": "Description of the location that provides useful, quality information. Should not be a duplicate of stop_name."
+          },
+          {
+            "name": "stop_lat",
+            "type": "Latitude",
+            "presence": "Conditionally Required",
+            "description": "Latitude of the location. For stops/platforms (location_type=0) and boarding area (location_type=4), the coordinates must be the ones of the bus pole — if exists — and otherwise of where the travelers are boarding the vehicle (on the sidewalk or the platform, and not on the roadway or the track where the vehicle stops).",
+            "conditions": [
+              "Required for locations which are stops (location_type=0), stations (location_type=1) or entrances/exits (location_type=2).",
+              "Optional for locations which are generic nodes (location_type=3) or boarding areas (location_type=4)."
+            ]
+          },
+          {
+            "name": "stop_lon",
+            "type": "Longitude",
+            "presence": "Conditionally Required",
+            "description": "Longitude of the location. For stops/platforms (location_type=0) and boarding area (location_type=4), the coordinates must be the ones of the bus pole — if exists — and otherwise of where the travelers are boarding the vehicle (on the sidewalk or the platform, and not on the roadway or the track where the vehicle stops).",
+            "conditions": [
+              "Required for locations which are stops (location_type=0), stations (location_type=1) or entrances/exits (location_type=2).",
+              "Optional for locations which are generic nodes (location_type=3) or boarding areas (location_type=4)."
+            ]
+          },
+          {
+            "name": "zone_id",
+            "type": "ID",
+            "presence": "Optional",
+            "description": "Identifies the fare zone for a stop. If this record represents a station or station entrance, the zone_id is ignored."
+          },
+          {
+            "name": "stop_url",
+            "type": "URL",
+            "presence": "Optional",
+            "description": "URL of a web page about the location. This should be different from the agency.agency_url and the routes.route_url field values."
+          },
+          {
+            "name": "location_type",
+            "type": "Enum",
+            "presence": "Optional",
+            "description": "Location type.",
+            "options": [
+              {
+                "value": "0 (or empty)",
+                "description": "Stop (or Platform). A location where passengers board or disembark from a transit vehicle. Is called a platform when defined within a parent_station."
+              },
+              {
+                "value": "1",
+                "description": "Station. A physical structure or area that contains one or more platform."
+              },
+              {
+                "value": "2",
+                "description": "Entrance/Exit. A location where passengers can enter or exit a station from the street. If an entrance/exit belongs to multiple stations, it may be linked by pathways to both, but the data provider must pick one of them as parent."
+              },
+              {
+                "value": "3",
+                "description": "Generic Node. A location within a station, not matching any other location_type, that may be used to link together pathways define in pathways.txt."
+              },
+              {
+                "value": "4",
+                "description": "Boarding Area. A specific location on a platform, where passengers can board and/or alight vehicles."
+              }
+            ]
+          },
+          {
+            "name": "parent_station",
+            "type": "Foreign ID referencing stops.stop_id",
+            "presence": "Conditionally Required",
+            "description": "Defines hierarchy between the different locations defined in stops.txt. It contains the ID of the parent location, as followed: Stop/platform (location_type=0): the parent_station field contains the ID of a station. Station (location_type=1): this field must be empty. Entrance/exit (location_type=2) or generic node (location_type=3): the parent_station field contains the ID of a station (location_type=1). Boarding Area (location_type=4): the parent_station field contains ID of a platform.",
+            "conditions": [
+              "Required for locations which are entrances (location_type=2), generic nodes (location_type=3) or boarding areas (location_type=4).",
+              "Optional for stops/platforms (location_type=0).",
+              "Forbidden for stations (location_type=1)."
+            ]
+          },
+          {
+            "name": "stop_timezone",
+            "type": "Timezone",
+            "presence": "Optional",
+            "description": "Timezone of the location. If the location has a parent station, it inherits the parent station's timezone instead of applying its own. Stations and parentless stops with empty stop_timezone inherit the timezone specified by agency.agency_timezone. The times provided in stop_times.txt are in the timezone specified by agency.agency_timezone, not stop_timezone. This ensures that the time values in a trip always increase over the course of a trip, regardless of which timezones the trip crosses."
+          },
+          {
+            "name": "wheelchair_boarding",
+            "type": "Enum",
+            "presence": "Optional",
+            "description": "Indicates whether wheelchair boardings are possible from the location.",
+            "options": [
+              {
+                "category": "For parentless stops",
+                "values": [
+                  {
+                    "value": "0 or empty",
+                    "description": "No accessibility information for the stop."
+                  },
+                  {
+                    "value": "1",
+                    "description": "Some vehicles at this stop can be boarded by a rider in a wheelchair."
+                  },
+                  {
+                    "value": "2",
+                    "description": "Wheelchair boarding is not possible at this stop."
+                  }
+                ]
+              },
+              {
+                "category": "For child stops",
+                "values": [
+                  {
+                    "value": "0 or empty",
+                    "description": "Stop will inherit its wheelchair_boarding behavior from the parent station, if specified in the parent."
+                  },
+                  {
+                    "value": "1",
+                    "description": "There exists some accessible path from outside the station to the specific stop/platform."
+                  },
+                  {
+                    "value": "2",
+                    "description": "There exists no accessible path from outside the station to the specific stop/platform."
+                  }
+                ]
+              },
+              {
+                "category": "For station entrances/exits",
+                "values": [
+                  {
+                    "value": "0 or empty",
+                    "description": "Station entrance will inherit its wheelchair_boarding behavior from the parent station, if specified for the parent."
+                  },
+                  {
+                    "value": "1",
+                    "description": "Station entrance is wheelchair accessible."
+                  },
+                  {
+                    "value": "2",
+                    "description": "No accessible path from station entrance to stops/platforms."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "level_id",
+            "type": "Foreign ID referencing levels.level_id",
+            "presence": "Optional",
+            "description": "Level of the location. The same level may be used by multiple unlinked stations."
+          },
+          {
+            "name": "platform_code",
+            "type": "Text",
+            "presence": "Optional",
+            "description": "Platform identifier for a platform stop (a stop belonging to a station). This should be just the platform identifier (eg. \"G\" or \"3\"). Words like \"platform\" or \"track\" (or the feed's language-specific equivalent) should not be included. This allows feed consumers to more easily internationalize and localize the platform identifier into other languages."
+          },
+          {
+            "name": "stop_access",
+            "type": "Enum",
+            "presence": "Conditionally Forbidden",
+            "description": "Indicates how the stop is accessed for a particular station. When stop_access is empty, the access for the specified stop or platform is considered undefined.",
+            "options": [
+              {
+                "value": "0",
+                "description": "The stop/platform cannot be directly accessed from the street network. It must be accessed from a station entrance if there is one defined for the station, otherwise the station itself. If there are pathways defined for the station, they must be used to access the stop/platform."
+              },
+              {
+                "value": "1",
+                "description": "Consuming applications should generate directions for access directly to the stop, independent of any entrances or pathways of the parent station."
+              }
+            ],
+            "conditions": [
+              "Forbidden for locations which are stations (location_type=1), entrances (location_type=2), generic nodes (location_type=3) or boarding areas (location_type=4).",
+              "Forbidden if parent_station is empty.",
+              "Optional otherwise."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
