@@ -1,0 +1,368 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gtfs.org/schema/schedule.schema.json",
+  "title": "General Transit Feed Specification Reference Schema",
+  "description": "JSON Schema for GTFS Schedule Reference YAML structure",
+  "type": "object",
+  "required": ["name", "revision", "revision_history_url", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the GTFS specification reference"
+    },
+    "revision": {
+      "type": "string",
+      "description": "Revision date in YYYY-MM-DD format",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "revision_history_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the revision history"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the GTFS specification"
+    },
+    "document_conventions": {
+      "type": "object",
+      "description": "Document conventions section",
+      "required": ["description"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of document conventions (RFC 2119 keywords)"
+        },
+        "term_definitions": {
+          "type": "object",
+          "description": "Term definitions section",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "terms": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["term", "definition"],
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "description": "Term being defined"
+                  },
+                  "definition": {
+                    "type": "string",
+                    "description": "Definition of the term"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "presence": {
+          "type": "object",
+          "description": "Presence conditions section",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "definition"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": ["Required", "Optional", "Conditionally Required", "Conditionally Forbidden", "Recommended"]
+                  },
+                  "definition": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "field_types": {
+          "type": "object",
+          "description": "Field types section",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "definition"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": ["Color", "Currency code", "Currency amount", "Date", "Email", "Enum", "ID", "Language code", "Latitude", "Longitude", "Float", "Integer", "Phone number", "Time", "Local time", "Text", "Timezone", "URL"]
+                  },
+                  "definition": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "field_signs": {
+          "type": "object",
+          "description": "Field signs section",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "signs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "definition"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": ["Non-negative", "Non-zero", "Positive"]
+                  },
+                  "definition": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "example": {
+              "type": "string"
+            }
+          }
+        },
+        "dataset_attributes": {
+          "type": "object",
+          "description": "Dataset attributes section",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "attributes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "definition"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "definition": {
+                    "type": "string"
+                  },
+                  "example": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dataset_files": {
+      "type": "object",
+      "description": "Dataset files section",
+      "required": ["description", "files"],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "presence", "description"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "GTFS file name"
+              },
+              "presence": {
+                "type": "string",
+                "enum": ["Required", "Optional", "Conditionally Required", "Conditionally Forbidden", "Recommended"]
+              },
+              "description": {
+                "type": "string"
+              },
+              "conditions": {
+                "type": "string",
+                "description": "Conditional requirements for the file"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Additional notes about the file"
+              }
+            }
+          }
+        }
+      }
+    },
+    "file_requirements": {
+      "type": "object",
+      "description": "File requirements section",
+      "required": ["description", "requirements"],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "csv_example": {
+          "type": "object",
+          "properties": {
+            "original_value": {
+              "type": "string"
+            },
+            "csv_value": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "dataset_publishing_general_practices": {
+      "type": "object",
+      "description": "Dataset publishing and general practices section",
+      "required": ["description", "practices"],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "practices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "field_definitions": {
+      "type": "object",
+      "description": "Field definitions section",
+      "required": ["description", "files"],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "presence", "primary_key", "fields"],
+            "properties": {
+              "file": {
+                "type": "string",
+                "description": "GTFS file name (e.g., agency.txt, stops.txt)"
+              },
+              "presence": {
+                "type": "string",
+                "enum": ["Required", "Optional", "Conditionally Required", "Conditionally Forbidden", "Recommended"]
+              },
+              "primary_key": {
+                "type": "string",
+                "description": "Primary key field(s) for the file"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type", "presence", "description"],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Field name"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Field type (e.g., Text, ID, Enum, etc.)"
+                    },
+                    "presence": {
+                      "type": "string",
+                      "enum": ["Required", "Optional", "Conditionally Required", "Conditionally Forbidden", "Recommended"]
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Field description"
+                    },
+                    "conditions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Conditional requirements for the field"
+                    },
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Additional comments about the field"
+                    },
+                    "options": {
+                      "type": "array",
+                      "description": "Enum options for Enum type fields",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "required": ["value", "description"],
+                            "properties": {
+                              "value": {
+                                "type": "string",
+                                "description": "Enum value"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Description of the enum value"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "required": ["category", "values"],
+                            "properties": {
+                              "category": {
+                                "type": "string",
+                                "description": "Category for grouped enum values"
+                              },
+                              "values": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "required": ["value", "description"],
+                                  "properties": {
+                                    "value": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
