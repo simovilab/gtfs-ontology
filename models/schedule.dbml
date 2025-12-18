@@ -1,0 +1,33 @@
+// GTFS Schedule Database Schema (DBML)
+// Based on field definitions from GTFS specification
+
+Table agency {
+  agency_id string [pk, note: "Identifies a transit brand. Conditionally required - required when dataset contains multiple transit agencies."]
+  agency_name string [not null, note: "Full name of the transit agency"]
+  agency_url string [not null, note: "URL of the transit agency"]
+  agency_timezone string [not null, note: "Timezone where the transit agency is located. Must be the same for all agencies in dataset."]
+  agency_lang string [note: "Primary language used by this transit agency (ISO 639-1 code)"]
+  agency_phone string [note: "Voice telephone number for the specified agency"]
+  agency_fare_url string [note: "URL of a web page where riders can purchase tickets or learn about fares"]
+  agency_email string [note: "Email address actively monitored by the agency's customer service department"]
+  cemv_support int [note: "cEMV (contactless EMV) support: 0/empty=no info, 1=supported, 2=not supported"]
+}
+
+Table stops {
+  stop_id string [pk, note: "Identifies a location (stop, platform, station, entrance/exit, node, or boarding area)"]
+  stop_code string [note: "Short text/number identifying the location for riders (e.g., on signage)"]
+  stop_name string [note: "Name of the location. Conditionally required for stops, stations, entrances/exits."]
+  tts_stop_name string [note: "Readable version of stop_name for text-to-speech systems"]
+  stop_desc string [note: "Description of the location providing useful, quality information"]
+  stop_lat float [note: "Latitude of the location. Conditionally required for stops, stations, entrances/exits."]
+  stop_lon float [note: "Longitude of the location. Conditionally required for stops, stations, entrances/exits."]
+  zone_id string [note: "Identifies the fare zone for a stop"]
+  stop_url string [note: "URL of a web page about the location"]
+  location_type int [default: 0, note: "Type of location: 0=stop, 1=station, 2=entrance/exit, 3=generic node, 4=boarding area"]
+  parent_station string [ref: > stops.stop_id, note: "ID of parent location. Conditionally required for entrances, nodes, boarding areas."]
+  stop_timezone string [note: "Timezone of the location. Inherits from parent station or agency timezone if empty."]
+  wheelchair_boarding int [note: "Wheelchair boarding: 0/empty=no info, 1=possible, 2=not possible"]
+  level_id string [note: "Level of the location (references levels.level_id)"]
+  platform_code string [note: "Platform identifier for platform stops (e.g., 'G' or '3')"]
+  stop_access int [note: "Access type: 0=via entrance/pathway, 1=direct street access. Conditionally forbidden."]
+}
