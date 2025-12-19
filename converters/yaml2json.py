@@ -13,13 +13,13 @@ from pathlib import Path
 
 try:
     import yaml  # PyYAML
-except Exception as e:
+except Exception:
     print("ERROR: PyYAML is required. Install with: uv add pyyaml", file=sys.stderr)
     sys.exit(1)
 
 ROOT = Path(__file__).resolve().parent
-YAML_PATH = ROOT / "schedule.yaml"
-JSON_PATH = ROOT / "schedule.json"
+YAML_PATH = ROOT / "serializers/schedule.yaml"
+JSON_PATH = ROOT / "serializers/schedule.json"
 
 
 def main() -> int:
