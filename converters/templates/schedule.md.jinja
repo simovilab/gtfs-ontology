@@ -1,0 +1,17 @@
+## {{ name }}
+
+**Revised {{ revision_date | format_date }}. See [Revision History]({{ revision_history_url }}) for more details.**
+
+{{ description }}
+
+## Document Conventions
+
+{{ document_conventions.description }}
+
+### Term Definitions
+
+{{ document_conventions.term_definitions.description }}
+
+{% for term in document_conventions.term_definitions.terms %}
+* **{{ term.term }}** - {{ term.definition }}
+{%- endfor %}

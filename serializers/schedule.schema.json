@@ -4,13 +4,13 @@
   "title": "General Transit Feed Specification Reference Schema",
   "description": "JSON Schema for GTFS Schedule Reference YAML structure",
   "type": "object",
-  "required": ["name", "revision", "revision_history_url", "description"],
+  "required": ["name", "revision_date", "revision_history_url", "description"],
   "properties": {
     "name": {
       "type": "string",
       "description": "Name of the GTFS specification reference"
     },
-    "revision": {
+    "revision_date": {
       "type": "string",
       "description": "Revision date in YYYY-MM-DD format",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"

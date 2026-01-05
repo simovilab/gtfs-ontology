@@ -75,12 +75,14 @@ name = "gtfs-ontology"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "jinja2" },
     { name = "ontospy" },
     { name = "pyyaml" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.6" },
     { name = "ontospy", specifier = ">=2.1.1" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]

@@ -5,7 +5,7 @@
 # --------------------------------------------
 
 name: General Transit Feed Specification Reference
-revision: '2025-10-28'
+revision_date: '2025-10-28'
 revision_history_url: 'https://gtfs.org/documentation/schedule/change-history/revision-history'
 description: 'This document defines the format and structure of the files that comprise a GTFS dataset.'
 
