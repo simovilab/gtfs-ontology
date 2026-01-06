@@ -1,6 +1,6 @@
 {
   "name": "General Transit Feed Specification Reference",
-  "revision": "2025-10-28",
+  "revision_date": "2025-10-28",
   "revision_history_url": "https://gtfs.org/documentation/schedule/change-history/revision-history",
   "description": "This document defines the format and structure of the files that comprise a GTFS dataset.",
   "document_conventions": {
@@ -688,6 +688,214 @@
               "Forbidden for locations which are stations (location_type=1), entrances (location_type=2), generic nodes (location_type=3) or boarding areas (location_type=4).",
               "Forbidden if parent_station is empty.",
               "Optional otherwise."
+            ]
+          }
+        ]
+      },
+      {
+        "file": "routes.txt",
+        "presence": "Required",
+        "primary_key": "route_id",
+        "fields": [
+          {
+            "name": "route_id",
+            "type": "Unique ID",
+            "presence": "Required",
+            "description": "Identifies a route."
+          },
+          {
+            "name": "agency_id",
+            "type": "Foreign ID referencing agency.agency_id",
+            "presence": "Conditionally Required",
+            "description": "Agency for the specified route.",
+            "conditions": [
+              "Required if multiple agencies are defined in agency.txt.",
+              "Recommended otherwise."
+            ]
+          },
+          {
+            "name": "route_short_name",
+            "type": "Text",
+            "presence": "Conditionally Required",
+            "description": "Short name of a route. Often a short, abstract identifier (e.g., \"32\", \"100X\", \"Green\") that riders use to identify a route. Both route_short_name and route_long_name may be defined.",
+            "conditions": [
+              "Required if routes.route_long_name is empty.",
+              "Recommended if there is a brief service designation. This should be the commonly-known passenger name of the service, and should be no longer than 12 characters."
+            ]
+          },
+          {
+            "name": "route_long_name",
+            "type": "Text",
+            "presence": "Conditionally Required",
+            "description": "Full name of a route. This name is generally more descriptive than the route_short_name and often includes the route's destination or stop. Both route_short_name and route_long_name may be defined.",
+            "conditions": [
+              "Required if routes.route_short_name is empty.",
+              "Optional otherwise."
+            ]
+          },
+          {
+            "name": "route_desc",
+            "type": "Text",
+            "presence": "Optional",
+            "description": "Description of a route that provides useful, quality information. Should not be a duplicate of route_short_name or route_long_name.",
+            "example": "\"A\" trains operate between Inwood-207 St, Manhattan and Far Rockaway-Mott Avenue, Queens at all times. Also from about 6AM until about midnight, additional \"A\" trains operate between Inwood-207 St and Lefferts Boulevard (trains typically alternate between Lefferts Blvd and Far Rockaway)."
+          },
+          {
+            "name": "route_type",
+            "type": "Enum",
+            "presence": "Required",
+            "description": "Indicates the type of transportation used on a route.",
+            "options": [
+              {
+                "value": "0",
+                "description": "Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area."
+              },
+              {
+                "value": "1",
+                "description": "Subway, Metro. Any underground rail system within a metropolitan area."
+              },
+              {
+                "value": "2",
+                "description": "Rail. Used for intercity or long-distance travel."
+              },
+              {
+                "value": "3",
+                "description": "Bus. Used for short- and long-distance bus routes."
+              },
+              {
+                "value": "4",
+                "description": "Ferry. Used for short- and long-distance boat service."
+              },
+              {
+                "value": "5",
+                "description": "Cable tram. Used for street-level rail cars where the cable runs beneath the vehicle (e.g., cable car in San Francisco)."
+              },
+              {
+                "value": "6",
+                "description": "Aerial lift, suspended cable car (e.g., gondola lift, aerial tramway). Cable transport where cabins, cars, gondolas or open chairs are suspended by means of one or more cables."
+              },
+              {
+                "value": "7",
+                "description": "Funicular. Any rail system designed for steep inclines."
+              },
+              {
+                "value": "11",
+                "description": "Trolleybus. Electric buses that draw power from overhead wires using poles."
+              },
+              {
+                "value": "12",
+                "description": "Monorail. Railway in which the track consists of a single rail or a beam."
+              }
+            ]
+          },
+          {
+            "name": "route_url",
+            "type": "URL",
+            "presence": "Optional",
+            "description": "URL of a web page about the particular route. Should be different from the agency.agency_url value."
+          },
+          {
+            "name": "route_color",
+            "type": "Color",
+            "presence": "Optional",
+            "description": "Route color designation that matches public facing material. Defaults to white (FFFFFF) when omitted or left empty. The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen."
+          },
+          {
+            "name": "route_text_color",
+            "type": "Color",
+            "presence": "Optional",
+            "description": "Legible color to use for text drawn against a background of route_color. Defaults to black (000000) when omitted or left empty. The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen."
+          },
+          {
+            "name": "route_sort_order",
+            "type": "Non-negative integer",
+            "presence": "Optional",
+            "description": "Orders the routes in a way which is ideal for presentation to customers. Routes with smaller route_sort_order values should be displayed first."
+          },
+          {
+            "name": "continuous_pickup",
+            "type": "Enum",
+            "presence": "Conditionally Forbidden",
+            "description": "Indicates that the rider can board the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_pickup may be overridden by defining values in stop_times.continuous_pickup for specific stop_times along the route.",
+            "options": [
+              {
+                "value": "0",
+                "description": "Continuous stopping pickup."
+              },
+              {
+                "value": "1 or empty",
+                "description": "No continuous stopping pickup."
+              },
+              {
+                "value": "2",
+                "description": "Must phone agency to arrange continuous stopping pickup."
+              },
+              {
+                "value": "3",
+                "description": "Must coordinate with driver to arrange continuous stopping pickup."
+              }
+            ],
+            "conditions": [
+              "Any value other than 1 or empty is Forbidden if stop_times.start_pickup_drop_off_window or stop_times.end_pickup_drop_off_window are defined for any trip of this route.",
+              "Optional otherwise."
+            ]
+          },
+          {
+            "name": "continuous_drop_off",
+            "type": "Enum",
+            "presence": "Conditionally Forbidden",
+            "description": "Indicates that the rider can alight from the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_drop_off may be overridden by defining values in stop_times.continuous_drop_off for specific stop_times along the route.",
+            "options": [
+              {
+                "value": "0",
+                "description": "Continuous stopping drop off."
+              },
+              {
+                "value": "1 or empty",
+                "description": "No continuous stopping drop off."
+              },
+              {
+                "value": "2",
+                "description": "Must phone agency to arrange continuous stopping drop off."
+              },
+              {
+                "value": "3",
+                "description": "Must coordinate with driver to arrange continuous stopping drop off."
+              }
+            ],
+            "conditions": [
+              "Any value other than 1 or empty is Forbidden if stop_times.start_pickup_drop_off_window or stop_times.end_pickup_drop_off_window are defined for any trip of this route.",
+              "Optional otherwise."
+            ]
+          },
+          {
+            "name": "network_id",
+            "type": "ID",
+            "presence": "Conditionally Forbidden",
+            "description": "Identifies a group of routes. Multiple rows in routes.txt may have the same network_id.",
+            "conditions": [
+              "Forbidden if the route_networks.txt or networks.txt file exists.",
+              "Optional otherwise."
+            ]
+          },
+          {
+            "name": "cemv_support",
+            "type": "Enum",
+            "presence": "Optional",
+            "description": "Indicates if riders can access a transit service (i.e., trip) associated with this route by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this route are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support.",
+            "options": [
+              {
+                "value": "0 or empty",
+                "description": "No cEMV information for trips associated with this route."
+              },
+              {
+                "value": "1",
+                "description": "Riders may use cEMVs as fare media for trips associated with this route."
+              },
+              {
+                "value": "2",
+                "description": "cEMVs are not supported as fare media for trips associated with this route."
+              }
             ]
           }
         ]

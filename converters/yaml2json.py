@@ -17,7 +17,7 @@ except Exception:
     print("ERROR: PyYAML is required. Install with: uv add pyyaml", file=sys.stderr)
     sys.exit(1)
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 YAML_PATH = ROOT / "serializers/schedule.yaml"
 JSON_PATH = ROOT / "serializers/schedule.json"
 
