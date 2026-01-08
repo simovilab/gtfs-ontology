@@ -1,33 +1,55 @@
-// GTFS Schedule Database Schema (DBML)
-// Based on field definitions from GTFS specification
+// Auto-generated from YAML field definitions
+// Source: serializers/schedule.yaml
+
+Project gtfs_schedule {
+Note: 'This document defines the format and structure of the files that comprise a GTFS dataset.'
+}
 
 Table agency {
-  agency_id string [pk, note: "Identifies a transit brand. Conditionally required - required when dataset contains multiple transit agencies."]
-  agency_name string [not null, note: "Full name of the transit agency"]
-  agency_url string [not null, note: "URL of the transit agency"]
-  agency_timezone string [not null, note: "Timezone where the transit agency is located. Must be the same for all agencies in dataset."]
-  agency_lang string [note: "Primary language used by this transit agency (ISO 639-1 code)"]
-  agency_phone string [note: "Voice telephone number for the specified agency"]
-  agency_fare_url string [note: "URL of a web page where riders can purchase tickets or learn about fares"]
-  agency_email string [note: "Email address actively monitored by the agency's customer service department"]
-  cemv_support int [note: "cEMV (contactless EMV) support: 0/empty=no info, 1=supported, 2=not supported"]
+agency_id string [pk, note: "Identifies a transit brand which is often synonymous with a transit agency. Note that in some cases, such as when a single agency operates multiple separate services, agencies and brands are distinct. This document uses the term \"agency\" in place of \"brand\". A dataset may contain data from multiple agencies."]
+agency_name string [not null, note: "Full name of the transit agency."]
+agency_url string [not null, note: "URL of the transit agency."]
+agency_timezone string [not null, note: "Timezone where the transit agency is located. If multiple agencies are specified in the dataset, each must have the same agency_timezone."]
+agency_lang string [note: "Primary language used by this transit agency. Should be provided to help GTFS consumers choose capitalization rules and other language-specific settings for the dataset."]
+agency_phone string [note: "A voice telephone number for the specified agency. This field is a string value that presents the telephone number as typical for the agency's service area. It may contain punctuation marks to group the digits of the number. Dialable text (for example, TriMet's \"503-238-RIDE\") is permitted, but the field must not contain any other descriptive text."]
+agency_fare_url string [note: "URL of a web page where a rider can purchase tickets or other fare instruments for that agency, or a web page containing information about that agency's fares."]
+agency_email string [note: "Email address actively monitored by the agency's customer service department. This email address should be a direct contact point where transit riders can reach a customer service representative at the agency."]
+cemv_support string [note: "Indicates if riders can access a transit service (i.e., trip) associated with this agency by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this agency are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support."]
 }
 
 Table stops {
-  stop_id string [pk, note: "Identifies a location (stop, platform, station, entrance/exit, node, or boarding area)"]
-  stop_code string [note: "Short text/number identifying the location for riders (e.g., on signage)"]
-  stop_name string [note: "Name of the location. Conditionally required for stops, stations, entrances/exits."]
-  tts_stop_name string [note: "Readable version of stop_name for text-to-speech systems"]
-  stop_desc string [note: "Description of the location providing useful, quality information"]
-  stop_lat float [note: "Latitude of the location. Conditionally required for stops, stations, entrances/exits."]
-  stop_lon float [note: "Longitude of the location. Conditionally required for stops, stations, entrances/exits."]
-  zone_id string [note: "Identifies the fare zone for a stop"]
-  stop_url string [note: "URL of a web page about the location"]
-  location_type int [default: 0, note: "Type of location: 0=stop, 1=station, 2=entrance/exit, 3=generic node, 4=boarding area"]
-  parent_station string [ref: > stops.stop_id, note: "ID of parent location. Conditionally required for entrances, nodes, boarding areas."]
-  stop_timezone string [note: "Timezone of the location. Inherits from parent station or agency timezone if empty."]
-  wheelchair_boarding int [note: "Wheelchair boarding: 0/empty=no info, 1=possible, 2=not possible"]
-  level_id string [note: "Level of the location (references levels.level_id)"]
-  platform_code string [note: "Platform identifier for platform stops (e.g., 'G' or '3')"]
-  stop_access int [note: "Access type: 0=via entrance/pathway, 1=direct street access. Conditionally forbidden."]
+stop_id string [not null, pk, note: "Identifies a location: stop/platform, station, entrance/exit, generic node or boarding area (see location_type)."]
+stop_code string [note: "Short text or a number that identifies the location for riders. These codes are often used in phone-based transit information systems or printed on signage to make it easier for riders to get information for a particular location. The stop_code may be the same as stop_id if it is public facing. This field should be left empty for locations without a code presented to riders."]
+stop_name string [note: "Name of the location. The stop_name should match the agency's rider-facing name for the location as printed on a timetable, published online, or represented on signage. For translations into other languages, use translations.txt. When the location is a boarding area (location_type=4), the stop_name should contains the name of the boarding area as displayed by the agency. It could be just one letter (like on some European intercity railway stations), or text like \"Wheelchair boarding area\" (NYC's Subway) or \"Head of short trains\" (Paris' RER)."]
+tts_stop_name string [note: "Readable version of the stop_name. See \"Text-to-speech field\" in the Term Definitions for more."]
+stop_desc string [note: "Description of the location that provides useful, quality information. Should not be a duplicate of stop_name."]
+stop_lat float [note: "Latitude of the location. For stops/platforms (location_type=0) and boarding area (location_type=4), the coordinates must be the ones of the bus pole — if exists — and otherwise of where the travelers are boarding the vehicle (on the sidewalk or the platform, and not on the roadway or the track where the vehicle stops)."]
+stop_lon float [note: "Longitude of the location. For stops/platforms (location_type=0) and boarding area (location_type=4), the coordinates must be the ones of the bus pole — if exists — and otherwise of where the travelers are boarding the vehicle (on the sidewalk or the platform, and not on the roadway or the track where the vehicle stops)."]
+zone_id string [note: "Identifies the fare zone for a stop. If this record represents a station or station entrance, the zone_id is ignored."]
+stop_url string [note: "URL of a web page about the location. This should be different from the agency.agency_url and the routes.route_url field values."]
+location_type string [note: "Location type."]
+parent_station string [note: "Defines hierarchy between the different locations defined in stops.txt. It contains the ID of the parent location, as followed: Stop/platform (location_type=0): the parent_station field contains the ID of a station. Station (location_type=1): this field must be empty. Entrance/exit (location_type=2) or generic node (location_type=3): the parent_station field contains the ID of a station (location_type=1). Boarding Area (location_type=4): the parent_station field contains ID of a platform."]
+stop_timezone string [note: "Timezone of the location. If the location has a parent station, it inherits the parent station's timezone instead of applying its own. Stations and parentless stops with empty stop_timezone inherit the timezone specified by agency.agency_timezone. The times provided in stop_times.txt are in the timezone specified by agency.agency_timezone, not stop_timezone. This ensures that the time values in a trip always increase over the course of a trip, regardless of which timezones the trip crosses."]
+wheelchair_boarding string [note: "Indicates whether wheelchair boardings are possible from the location."]
+level_id string [note: "Level of the location. The same level may be used by multiple unlinked stations."]
+platform_code string [note: "Platform identifier for a platform stop (a stop belonging to a station). This should be just the platform identifier (eg. \"G\" or \"3\"). Words like \"platform\" or \"track\" (or the feed's language-specific equivalent) should not be included. This allows feed consumers to more easily internationalize and localize the platform identifier into other languages."]
+stop_access string [note: "Indicates how the stop is accessed for a particular station. When stop_access is empty, the access for the specified stop or platform is considered undefined."]
 }
+
+Table routes {
+route_id string [not null, pk, note: "Identifies a route."]
+agency_id string [note: "Agency for the specified route."]
+route_short_name string [note: "Short name of a route. Often a short, abstract identifier (e.g., \"32\", \"100X\", \"Green\") that riders use to identify a route. Both route_short_name and route_long_name may be defined."]
+route_long_name string [note: "Full name of a route. This name is generally more descriptive than the route_short_name and often includes the route's destination or stop. Both route_short_name and route_long_name may be defined."]
+route_desc string [note: "Description of a route that provides useful, quality information. Should not be a duplicate of route_short_name or route_long_name."]
+route_type string [not null, note: "Indicates the type of transportation used on a route."]
+route_url string [note: "URL of a web page about the particular route. Should be different from the agency.agency_url value."]
+route_color string [note: "Route color designation that matches public facing material. Defaults to white (FFFFFF) when omitted or left empty. The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen."]
+route_text_color string [note: "Legible color to use for text drawn against a background of route_color. Defaults to black (000000) when omitted or left empty. The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen."]
+route_sort_order int [note: "Orders the routes in a way which is ideal for presentation to customers. Routes with smaller route_sort_order values should be displayed first."]
+continuous_pickup string [note: "Indicates that the rider can board the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_pickup may be overridden by defining values in stop_times.continuous_pickup for specific stop_times along the route."]
+continuous_drop_off string [note: "Indicates that the rider can alight from the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_drop_off may be overridden by defining values in stop_times.continuous_drop_off for specific stop_times along the route."]
+network_id string [note: "Identifies a group of routes. Multiple rows in routes.txt may have the same network_id."]
+cemv_support string [note: "Indicates if riders can access a transit service (i.e., trip) associated with this route by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this route are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support."]
+}
+

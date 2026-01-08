@@ -37,3 +37,35 @@
 {%- endfor %}
 
 *Example: {{ document_conventions.field_signs.example }}*
+
+### Dataset Attributes
+
+{{ document_conventions.dataset_attributes.description }}
+{% for attribute in document_conventions.dataset_attributes.attributes %}
+* **{{ attribute.name }}** - {{ attribute.definition }} {% if attribute.example %}<br> *Example: {{ attribute.example }}*{% endif %}
+{%- endfor %}
+
+## Dataset Files
+
+{{ dataset_files.description }}
+
+| **File Name** | **Presence** | **Description** |
+|---------------|--------------|-----------------|
+{%- for file in dataset_files.files %}
+| {{ file.name }} | {{ file.presence }} | {{ file.description }} |
+{%- endfor %}
+
+## File Requirements
+
+{{ file_requirements.description }}
+
+{% for requirement in file_requirements.requirements %}
+- {{ requirement }}
+{%- endfor %}
+
+## Dataset Publishing & General Practices
+
+{{ dataset_publishing.description }}
+{% for practice in dataset_publishing.practices %}
+- {{ practice }}
+{%- endfor %}

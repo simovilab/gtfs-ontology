@@ -66,3 +66,80 @@ Signs applicable to Float or Integer field types.
 * **Positive** - Greater than 0.
 
 *Example: Non-negative float: A floating point number greater than or equal to 0.*
+
+### Dataset Attributes
+
+Attributes that apply to the entire dataset.
+
+* **Primary key** - The primary key of a dataset is the field or combination of fields that uniquely identify a row. Primary key (*) is used when all provided fields for a file are used to uniquely identify a row. Primary key (none) means that the file allows only one row. <br> *Example: The trip_id and stop_sequence fields make the primary key of stop_times.txt.*
+
+## Dataset Files
+
+This specification defines the following files.
+
+| **File Name** | **Presence** | **Description** |
+|---------------|--------------|-----------------|
+| agency.txt | Required | Transit agencies with service represented in this dataset. |
+| stops.txt | Conditionally Required | Stops where vehicles pick up or drop off riders. Also defines stations and station entrances. |
+| routes.txt | Required | Transit routes. A route is a group of trips that are displayed to riders as a single service. |
+| trips.txt | Required | Trips for each route. A trip is a sequence of two or more stops that occur during a specific time period. |
+| stop_times.txt | Required | Times that a vehicle arrives at and departs from stops for each trip. |
+| calendar.txt | Conditionally Required | Service dates specified using a weekly schedule with start and end dates. |
+| calendar_dates.txt | Conditionally Required | Exceptions for the services defined in the calendar.txt. |
+| fare_attributes.txt | Optional | Fare information for a transit agency's routes. |
+| fare_rules.txt | Optional | Rules to apply fares for itineraries. |
+| timeframes.txt | Optional | Date and time periods to use in fare rules for fares that depend on date and time factors. |
+| rider_categories.txt | Optional | Defines categories of riders (e.g. elderly, student). |
+| fare_media.txt | Optional | To describe the fare media that can be employed to use fare products. |
+| fare_products.txt | Optional | To describe the different types of tickets or fares that can be purchased by riders. |
+| fare_leg_rules.txt | Optional | Fare rules for individual legs of travel. |
+| fare_leg_join_rules.txt | Optional | Rules for defining two or more legs should be considered as a single effective fare leg for the purposes of matching against rules in fare_leg_rules.txt |
+| fare_transfer_rules.txt | Optional | Fare rules for transfers between legs of travel. |
+| areas.txt | Optional | Area grouping of locations. |
+| stop_areas.txt | Optional | Rules to assign stops to areas. |
+| networks.txt | Conditionally Forbidden | Network grouping of routes. |
+| route_networks.txt | Conditionally Forbidden | Rules to assign routes to networks. |
+| shapes.txt | Optional | Rules for mapping vehicle travel paths, sometimes referred to as route alignments. |
+| frequencies.txt | Optional | Headway (time between trips) for headway-based service or a compressed representation of fixed-schedule service. |
+| transfers.txt | Optional | Rules for making connections at transfer points between routes. |
+| pathways.txt | Optional | Pathways linking together locations within stations. |
+| levels.txt | Conditionally Required | Levels within stations. |
+| location_groups.txt | Optional | A group of stops that together indicate locations where a rider may request pickup or drop off. |
+| location_group_stops.txt | Optional | Rules to assign stops to location groups. |
+| locations.geojson | Optional | Zones for rider pickup or drop-off requests by on-demand services, represented as GeoJSON polygons. |
+| booking_rules.txt | Optional | Booking information for rider-requested services. |
+| translations.txt | Optional | Translations of customer-facing dataset values. |
+| feed_info.txt | Conditionally Required | Dataset metadata, including publisher, version, and expiration information. |
+| attributions.txt | Optional | Dataset attributions. |
+
+## File Requirements
+
+The following requirements apply to the format and contents of the dataset files.
+
+
+- All files must be saved as comma-delimited text.
+- The first line of each file must contain field names. Each subsection of the Field Definitions section corresponds to one of the files in a GTFS dataset and lists the field names that may be used in that file.
+- All file and field names are case-sensitive.
+- Field values must not contain tabs, carriage returns or new lines.
+- Field values that contain quotation marks or commas must be enclosed within quotation marks. In addition, each quotation mark in the field value must be preceded with a quotation mark. This is consistent with the manner in which Microsoft Excel outputs comma-delimited (CSV) files. For more information on the CSV file format, see http://tools.ietf.org/html/rfc4180.
+- Field values must not contain HTML tags, comments or escape sequences.
+- Extra spaces between fields or field names should be removed. Many parsers consider the spaces to be part of the value, which may cause errors.
+- Each line must end with a CRLF or LF linebreak character.
+- Files should be encoded in UTF-8 to support all Unicode characters. Files that include the Unicode byte-order mark (BOM) character are acceptable. See http://unicode.org/faq/utf_bom.html#BOM for more information on the BOM character and UTF-8.
+- All dataset files must be zipped together. The files must reside at the root level directly, not in a subfolder.
+- All customer-facing text strings (including stop names, route names, and headsigns) should use Mixed Case (not ALL CAPS), following local conventions for capitalization of place names on displays capable of displaying lower case characters (e.g. "Brighton Churchill Square", "Villiers-sur-Marne", "Market Street").
+- The use of abbreviations should be avoided throughout the feed for names and other text (e.g. St. for Street) unless a location is called by its abbreviated name (e.g. "JFK Airport"). Abbreviations may be problematic for accessibility by screen reader software and voice user interfaces. Consuming software can be engineered to reliably convert full words to abbreviations for display, but converting from abbreviations to full words is prone to more risk of error.
+
+## Dataset Publishing & General Practices
+
+General practices for publishing a GTFS dataset.
+
+- Datasets should be published at a public, permanent URL, including the zip file name. (e.g., www.agency.org/gtfs/gtfs.zip). Ideally, the URL should be directly downloadable without requiring login to access the file, to facilitate download by consuming software applications. While it is recommended (and the most common practice) to make a GTFS dataset openly downloadable, if a data provider does need to control access to GTFS for licensing or other reasons, it is recommended to control access to the GTFS dataset using API keys, which will facilitate automatic downloads.
+- GTFS data should be published in iterations so that a single file at a stable location always contains the latest official description of service for a transit agency (or agencies).
+- Datasets should maintain persistent identifiers (id fields) for stop_id, route_id, and agency_id across data iterations whenever possible.
+- One GTFS dataset should contain current and upcoming service (sometimes called a "merged" dataset). There are multiple merge tools available that can be used to create a merged dataset from two different GTFS feeds.
+- At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
+- If possible, the GTFS dataset should cover at least the next 30 days of service.
+- Old services (expired calendars) should be removed from the feed.
+- If a service modification will go into effect in 7 days or fewer, this service change should be expressed through a GTFS-realtime feed (service advisories or trip updates) rather than static GTFS dataset.
+- The web-server hosting GTFS data should be configured to correctly report the file modification date (see HTTP/1.1 - Request for Comments 2616, under Section 14.29).

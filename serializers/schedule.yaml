@@ -4,10 +4,11 @@
 # General Transit Feed Specification Reference
 # --------------------------------------------
 
-name: General Transit Feed Specification Reference
-revision_date: '2025-10-28'
-revision_history_url: 'https://gtfs.org/documentation/schedule/change-history/revision-history'
-description: 'This document defines the format and structure of the files that comprise a GTFS dataset.'
+metadata:
+  name: General Transit Feed Specification Reference
+  revision_date: '2025-10-28'
+  revision_history_url: 'https://gtfs.org/documentation/schedule/change-history/revision-history'
+  description: 'This document defines the format and structure of the files that comprise a GTFS dataset.'
 
 document_conventions:
   description: 'The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.'
@@ -251,7 +252,7 @@ file_requirements:
     original_value: 'Contains "quotes", commas and text'
     csv_value: '"Contains ""quotes"", commas and text"'
 
-dataset_publishing_general_practices:
+dataset_publishing:
   description: 'General practices for publishing a GTFS dataset.'
   practices:
     - 'Datasets should be published at a public, permanent URL, including the zip file name. (e.g., www.agency.org/gtfs/gtfs.zip). Ideally, the URL should be directly downloadable without requiring login to access the file, to facilitate download by consuming software applications. While it is recommended (and the most common practice) to make a GTFS dataset openly downloadable, if a data provider does need to control access to GTFS for licensing or other reasons, it is recommended to control access to the GTFS dataset using API keys, which will facilitate automatic downloads.'

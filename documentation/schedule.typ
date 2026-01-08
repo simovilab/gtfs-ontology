@@ -49,6 +49,46 @@
   for (name, definition) in contents.document_conventions.field_types.types {
     [/ #name: #definition]
   }
+
+  [
+
+    == Field Signs
+
+    #contents.document_conventions.field_signs.description
+
+  ]
+
+  for (name, definition) in contents.document_conventions.field_signs.signs {
+    [/ #name: #definition]
+  }
+
+  [
+
+    == Dataset Attributes
+
+    #contents.document_conventions.dataset_attributes.description
+
+  ]
+
+  for (name, definition, example) in contents.document_conventions.dataset_attributes.attributes {
+    [/ #name: #definition \ #emph[Example: #example]]
+  }
+
+  [
+
+    = Dataset Files
+
+    #contents.dataset_files.description
+
+    #table(
+      columns: 3,
+      stroke: (x: none),
+      table.header[*File Name*][*Presence*][*Description*],
+      ..for (name, presence, description) in contents.dataset_files.files {
+        (name, presence, description)
+      },
+    )
+  ]
 }
 
 #reference(

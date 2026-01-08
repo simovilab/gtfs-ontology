@@ -4,25 +4,32 @@
   "title": "General Transit Feed Specification Reference Schema",
   "description": "JSON Schema for GTFS Schedule Reference YAML structure",
   "type": "object",
-  "required": ["name", "revision_date", "revision_history_url", "description"],
+  "required": ["metadata"],
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "Name of the GTFS specification reference"
-    },
-    "revision_date": {
-      "type": "string",
-      "description": "Revision date in YYYY-MM-DD format",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-    },
-    "revision_history_url": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL to the revision history"
-    },
-    "description": {
-      "type": "string",
-      "description": "Description of the GTFS specification"
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the GTFS specification document",
+      "required": ["name", "revision_date", "revision_history_url", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the GTFS specification reference"
+        },
+        "revision_date": {
+          "type": "string",
+          "description": "Revision date in YYYY-MM-DD format",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "revision_history_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the revision history"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the GTFS specification"
+        }
+      }
     },
     "document_conventions": {
       "type": "object",

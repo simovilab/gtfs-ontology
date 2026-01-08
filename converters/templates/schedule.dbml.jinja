@@ -1,0 +1,17 @@
+// Auto-generated from YAML field definitions
+// Source: serializers/schedule.yaml
+
+Project gtfs_schedule {
+Note: '{{ metadata.description }}'
+}
+
+{% for table in tables %}
+Table {{ table.name }} {
+{% for column in table.columns %}
+{{ column.name }} {{ column.type }}{% if column.attrs and column.attrs|length %} [{{ column.attrs | join(', ') }}]{%
+endif %}
+
+{% endfor %}
+}
+
+{% endfor %}
