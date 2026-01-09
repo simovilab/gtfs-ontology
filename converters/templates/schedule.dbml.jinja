@@ -5,13 +5,24 @@ Project gtfs_schedule {
 Note: '{{ metadata.description }}'
 }
 
+{% for enum in enums %}
+enum gtfs.{{ enum.name }} {
+{% for value in enum.options %} "{{ value.value }}"{% if value.description %} [note: '{{ value.description }}']{% endif
+%}
+
+{% endfor %}
+}
+
+{% endfor %}
+
 {% for table in tables %}
-Table {{ table.name }} {
+Table gtfs.{{ table.name }} {
 {% for column in table.columns %}
 {{ column.name }} {{ column.type }}{% if column.attrs and column.attrs|length %} [{{ column.attrs | join(', ') }}]{%
 endif %}
 
 {% endfor %}
+Note: '{{ table.description }}'
 }
 
 {% endfor %}

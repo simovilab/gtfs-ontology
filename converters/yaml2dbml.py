@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
@@ -86,13 +86,28 @@ def load_yaml(path: Path) -> Dict[str, Any]:
         return yaml.safe_load(f)
 
 
-def build_tables(data: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Transform YAML data to a template-friendly structure for DBML generation."""
+def build_tables(
+    data: Dict[str, Any],
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Transform YAML data to structures for DBML generation.
+
+    Returns (enums, tables) where enums are DBML enum definitions and tables are table definitions.
+    """
     fd = (data or {}).get("field_definitions", {})
     files = fd.get("files")
 
     if not files:
-        return []
+        return [], []
+
+    # Build a map of file names to their dataset_files descriptions
+    dataset_files = (data or {}).get("dataset_files", {})
+    dataset_files_list = dataset_files.get("files", [])
+    file_descriptions = {}
+    for df in dataset_files_list:
+        df_name = df.get("name")
+        df_desc = df.get("description")
+        if df_name and df_desc:
+            file_descriptions[df_name] = df_desc
 
     # Support both list and mapping forms
     if isinstance(files, dict):
@@ -104,19 +119,62 @@ def build_tables(data: Dict[str, Any]) -> List[Dict[str, Any]]:
         iterable = files
 
     tables: List[Dict[str, Any]] = []
+    enums: List[Dict[str, Any]] = []
+    seen_enum_names = set()
+
     for file_entry in iterable:
         file_name = file_entry.get("name") or file_entry.get("file") or "unknown"
         table_name = normalize_table_name(str(file_name))
         fields = file_entry.get("fields", [])
 
-        pk_assigned = False
+        # Get primary key definition from YAML (supports both string and array)
+        primary_key_def = file_entry.get("primary_key")
+        if isinstance(primary_key_def, str):
+            primary_keys = [primary_key_def]
+        elif isinstance(primary_key_def, list):
+            primary_keys = primary_key_def
+        else:
+            primary_keys = []
+
         columns: List[Dict[str, Any]] = []
         for field in fields:
             fname = field.get("name", "field")
-            ftype = map_type(str(field.get("type", "text")))
+            ftype_raw = str(field.get("type", "text"))
+            ftype_lower = ftype_raw.strip().lower()
             presence = (field.get("presence") or "").strip().lower()
             description = field.get("description") or ""
             notes = field.get("notes")
+            options = field.get("options")
+
+            # Check if this is an enum field with options
+            if ftype_lower == "enum" and options:
+                enum_name = f"{table_name}_{fname}_options"
+
+                # Avoid duplicate enum definitions
+                if enum_name not in seen_enum_names:
+                    seen_enum_names.add(enum_name)
+
+                    # Build enum values
+                    enum_values = []
+                    for option in options:
+                        if isinstance(option, dict):
+                            value = option.get("value", "")
+                            description_opt = option.get("description", "")
+                            if value:
+                                enum_values.append(
+                                    {
+                                        "value": str(value),
+                                        "description": str(description_opt),
+                                    }
+                                )
+
+                    if enum_values:
+                        enums.append({"name": enum_name, "options": enum_values})
+
+                # Use the enum type instead of mapping to string
+                dbml_type = f"gtfs.{enum_name}"
+            else:
+                dbml_type = map_type(ftype_raw)
 
             attrs: List[str] = []
 
@@ -124,13 +182,10 @@ def build_tables(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             if presence.startswith("required"):
                 attrs.append("not null")
 
-            # Primary key: explicit flag beats heuristic; else use *_id convention if none set yet.
-            is_pk = bool(field.get("primary_key")) or (
-                not pk_assigned and str(fname).endswith("_id")
-            )
+            # Primary key: check if field is in the primary_keys list
+            is_pk = fname in primary_keys
             if is_pk:
                 attrs.append("pk")
-                pk_assigned = True
 
             # Default values (quote strings)
             if "default" in field:
@@ -139,6 +194,11 @@ def build_tables(data: Dict[str, Any]) -> List[Dict[str, Any]]:
                     attrs.append(f"default: '{default_val}'")
                 else:
                     attrs.append(f"default: {default_val}")
+
+            # Foreign key reference
+            if "foreign_key" in field:
+                fk = field["foreign_key"]
+                attrs.append(f"ref: > gtfs.{fk}")
 
             # Compose note from description + notes
             note_parts = []
@@ -152,14 +212,18 @@ def build_tables(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             columns.append(
                 {
                     "name": fname,
-                    "type": ftype,
+                    "type": dbml_type,
                     "attrs": attrs,
                 }
             )
 
-        tables.append({"name": table_name, "columns": columns})
+        # Get table description from dataset_files mapping
+        table_description = file_descriptions.get(file_name, "")
+        tables.append(
+            {"name": table_name, "columns": columns, "description": table_description}
+        )
 
-    return tables
+    return enums, tables
 
 
 def generate_schedule_dbml(overwrite: bool = True) -> Path:
@@ -178,14 +242,14 @@ def generate_schedule_dbml(overwrite: bool = True) -> Path:
 
     data = load_yaml(yaml_path)
     metadata = data.get("metadata", {})
-    tables = build_tables(data)
+    enums, tables = build_tables(data)
 
     env = Environment(
         loader=FileSystemLoader(template_dir), trim_blocks=True, lstrip_blocks=True
     )
     template = env.get_template("schedule.dbml.jinja")
 
-    rendered = template.render(metadata=metadata, tables=tables)
+    rendered = template.render(metadata=metadata, enums=enums, tables=tables)
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(rendered)
 

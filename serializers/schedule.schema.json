@@ -277,8 +277,21 @@
                 "enum": ["Required", "Optional", "Conditionally Required", "Conditionally Forbidden", "Recommended"]
               },
               "primary_key": {
-                "type": "string",
-                "description": "Primary key field(s) for the file"
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "description": "Single primary key field name"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Array of field names for composite primary key",
+                    "minItems": 1
+                  }
+                ],
+                "description": "Primary key field(s) for the file. Can be a single field name or an array for composite keys."
               },
               "fields": {
                 "type": "array",

@@ -5,7 +5,118 @@ Project gtfs_schedule {
 Note: 'This document defines the format and structure of the files that comprise a GTFS dataset.'
 }
 
-Table agency {
+enum gtfs.agency_cemv_support_options {
+ "0 or empty" [note: 'No cEMV information for trips associated with this agency.']
+ "1" [note: 'Riders may use cEMVs as fare media for trips associated with this agency.']
+ "2" [note: 'cEMVs are not supported as fare media for trips associated with this agency.']
+}
+
+enum gtfs.stops_location_type_options {
+ "0 (or empty)" [note: 'Stop (or Platform). A location where passengers board or disembark from a transit vehicle. Is called a platform when defined within a parent_station.']
+ "1" [note: 'Station. A physical structure or area that contains one or more platform.']
+ "2" [note: 'Entrance/Exit. A location where passengers can enter or exit a station from the street. If an entrance/exit belongs to multiple stations, it may be linked by pathways to both, but the data provider must pick one of them as parent.']
+ "3" [note: 'Generic Node. A location within a station, not matching any other location_type, that may be used to link together pathways define in pathways.txt.']
+ "4" [note: 'Boarding Area. A specific location on a platform, where passengers can board and/or alight vehicles.']
+}
+
+enum gtfs.stops_stop_access_options {
+ "0" [note: 'The stop/platform cannot be directly accessed from the street network. It must be accessed from a station entrance if there is one defined for the station, otherwise the station itself. If there are pathways defined for the station, they must be used to access the stop/platform.']
+ "1" [note: 'Consuming applications should generate directions for access directly to the stop, independent of any entrances or pathways of the parent station.']
+}
+
+enum gtfs.routes_route_type_options {
+ "0" [note: 'Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area.']
+ "1" [note: 'Subway, Metro. Any underground rail system within a metropolitan area.']
+ "2" [note: 'Rail. Used for intercity or long-distance travel.']
+ "3" [note: 'Bus. Used for short- and long-distance bus routes.']
+ "4" [note: 'Ferry. Used for short- and long-distance boat service.']
+ "5" [note: 'Cable tram. Used for street-level rail cars where the cable runs beneath the vehicle (e.g., cable car in San Francisco).']
+ "6" [note: 'Aerial lift, suspended cable car (e.g., gondola lift, aerial tramway). Cable transport where cabins, cars, gondolas or open chairs are suspended by means of one or more cables.']
+ "7" [note: 'Funicular. Any rail system designed for steep inclines.']
+ "11" [note: 'Trolleybus. Electric buses that draw power from overhead wires using poles.']
+ "12" [note: 'Monorail. Railway in which the track consists of a single rail or a beam.']
+}
+
+enum gtfs.routes_continuous_pickup_options {
+ "0" [note: 'Continuous stopping pickup.']
+ "1 or empty" [note: 'No continuous stopping pickup.']
+ "2" [note: 'Must phone agency to arrange continuous stopping pickup.']
+ "3" [note: 'Must coordinate with driver to arrange continuous stopping pickup.']
+}
+
+enum gtfs.routes_continuous_drop_off_options {
+ "0" [note: 'Continuous stopping drop off.']
+ "1 or empty" [note: 'No continuous stopping drop off.']
+ "2" [note: 'Must phone agency to arrange continuous stopping drop off.']
+ "3" [note: 'Must coordinate with driver to arrange continuous stopping drop off.']
+}
+
+enum gtfs.routes_cemv_support_options {
+ "0 or empty" [note: 'No cEMV information for trips associated with this route.']
+ "1" [note: 'Riders may use cEMVs as fare media for trips associated with this route.']
+ "2" [note: 'cEMVs are not supported as fare media for trips associated with this route.']
+}
+
+enum gtfs.calendar_monday_options {
+ "1" [note: 'Service is available for all Mondays in the date range.']
+ "0" [note: 'Service is not available for Mondays in the date range.']
+}
+
+enum gtfs.calendar_tuesday_options {
+ "1" [note: 'Service is available for all Tuesdays in the date range.']
+ "0" [note: 'Service is not available for Tuesdays in the date range.']
+}
+
+enum gtfs.calendar_wednesday_options {
+ "1" [note: 'Service is available for all Wednesdays in the date range.']
+ "0" [note: 'Service is not available for Wednesdays in the date range.']
+}
+
+enum gtfs.calendar_thursday_options {
+ "1" [note: 'Service is available for all Thursdays in the date range.']
+ "0" [note: 'Service is not available for Thursdays in the date range.']
+}
+
+enum gtfs.calendar_friday_options {
+ "1" [note: 'Service is available for all Fridays in the date range.']
+ "0" [note: 'Service is not available for Fridays in the date range.']
+}
+
+enum gtfs.calendar_saturday_options {
+ "1" [note: 'Service is available for all Saturdays in the date range.']
+ "0" [note: 'Service is not available for Saturdays in the date range.']
+}
+
+enum gtfs.calendar_sunday_options {
+ "1" [note: 'Service is available for all Sundays in the date range.']
+ "0" [note: 'Service is not available for Sundays in the date range.']
+}
+
+enum gtfs.trips_direction_id_options {
+ "0" [note: 'Travel in one direction (e.g., outbound travel).']
+ "1" [note: 'Travel in the opposite direction (e.g., inbound travel).']
+}
+
+enum gtfs.trips_wheelchair_accessible_options {
+ "0 or empty" [note: 'No wheelchair accessibility information for the trip.']
+ "1" [note: 'Vehicle being used on this particular trip can accommodate at least one rider in a wheelchair.']
+ "2" [note: 'No riders in wheelchairs can be accommodated on this trip.']
+}
+
+enum gtfs.trips_bikes_allowed_options {
+ "0 or empty" [note: 'No bike information for the trip.']
+ "1" [note: 'Vehicle being used on this particular trip can accommodate at least one bicycle.']
+ "2" [note: 'No bicycles are allowed on this trip.']
+}
+
+enum gtfs.trips_cars_allowed_options {
+ "0 or empty" [note: 'No car information for the trip.']
+ "1" [note: 'Vehicle being used on this particular trip can accommodate at least one car.']
+ "2" [note: 'No cars are allowed on this trip.']
+}
+
+
+Table gtfs.agency {
 agency_id string [pk, note: "Identifies a transit brand which is often synonymous with a transit agency. Note that in some cases, such as when a single agency operates multiple separate services, agencies and brands are distinct. This document uses the term \"agency\" in place of \"brand\". A dataset may contain data from multiple agencies."]
 agency_name string [not null, note: "Full name of the transit agency."]
 agency_url string [not null, note: "URL of the transit agency."]
@@ -14,10 +125,11 @@ agency_lang string [note: "Primary language used by this transit agency. Should 
 agency_phone string [note: "A voice telephone number for the specified agency. This field is a string value that presents the telephone number as typical for the agency's service area. It may contain punctuation marks to group the digits of the number. Dialable text (for example, TriMet's \"503-238-RIDE\") is permitted, but the field must not contain any other descriptive text."]
 agency_fare_url string [note: "URL of a web page where a rider can purchase tickets or other fare instruments for that agency, or a web page containing information about that agency's fares."]
 agency_email string [note: "Email address actively monitored by the agency's customer service department. This email address should be a direct contact point where transit riders can reach a customer service representative at the agency."]
-cemv_support string [note: "Indicates if riders can access a transit service (i.e., trip) associated with this agency by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this agency are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support."]
+cemv_support gtfs.agency_cemv_support_options [note: "Indicates if riders can access a transit service (i.e., trip) associated with this agency by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this agency are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support."]
+Note: 'Transit agencies with service represented in this dataset.'
 }
 
-Table stops {
+Table gtfs.stops {
 stop_id string [not null, pk, note: "Identifies a location: stop/platform, station, entrance/exit, generic node or boarding area (see location_type)."]
 stop_code string [note: "Short text or a number that identifies the location for riders. These codes are often used in phone-based transit information systems or printed on signage to make it easier for riders to get information for a particular location. The stop_code may be the same as stop_id if it is public facing. This field should be left empty for locations without a code presented to riders."]
 stop_name string [note: "Name of the location. The stop_name should match the agency's rider-facing name for the location as printed on a timetable, published online, or represented on signage. For translations into other languages, use translations.txt. When the location is a boarding area (location_type=4), the stop_name should contains the name of the boarding area as displayed by the agency. It could be just one letter (like on some European intercity railway stations), or text like \"Wheelchair boarding area\" (NYC's Subway) or \"Head of short trains\" (Paris' RER)."]
@@ -27,29 +139,69 @@ stop_lat float [note: "Latitude of the location. For stops/platforms (location_t
 stop_lon float [note: "Longitude of the location. For stops/platforms (location_type=0) and boarding area (location_type=4), the coordinates must be the ones of the bus pole — if exists — and otherwise of where the travelers are boarding the vehicle (on the sidewalk or the platform, and not on the roadway or the track where the vehicle stops)."]
 zone_id string [note: "Identifies the fare zone for a stop. If this record represents a station or station entrance, the zone_id is ignored."]
 stop_url string [note: "URL of a web page about the location. This should be different from the agency.agency_url and the routes.route_url field values."]
-location_type string [note: "Location type."]
-parent_station string [note: "Defines hierarchy between the different locations defined in stops.txt. It contains the ID of the parent location, as followed: Stop/platform (location_type=0): the parent_station field contains the ID of a station. Station (location_type=1): this field must be empty. Entrance/exit (location_type=2) or generic node (location_type=3): the parent_station field contains the ID of a station (location_type=1). Boarding Area (location_type=4): the parent_station field contains ID of a platform."]
+location_type gtfs.stops_location_type_options [note: "Location type."]
+parent_station string [ref: > gtfs.stops.stop_id, note: "Defines hierarchy between the different locations defined in stops.txt. It contains the ID of the parent location, as followed: Stop/platform (location_type=0): the parent_station field contains the ID of a station. Station (location_type=1): this field must be empty. Entrance/exit (location_type=2) or generic node (location_type=3): the parent_station field contains the ID of a station (location_type=1). Boarding Area (location_type=4): the parent_station field contains ID of a platform."]
 stop_timezone string [note: "Timezone of the location. If the location has a parent station, it inherits the parent station's timezone instead of applying its own. Stations and parentless stops with empty stop_timezone inherit the timezone specified by agency.agency_timezone. The times provided in stop_times.txt are in the timezone specified by agency.agency_timezone, not stop_timezone. This ensures that the time values in a trip always increase over the course of a trip, regardless of which timezones the trip crosses."]
-wheelchair_boarding string [note: "Indicates whether wheelchair boardings are possible from the location."]
+wheelchair_boarding gtfs.stops_wheelchair_boarding_options [note: "Indicates whether wheelchair boardings are possible from the location."]
 level_id string [note: "Level of the location. The same level may be used by multiple unlinked stations."]
 platform_code string [note: "Platform identifier for a platform stop (a stop belonging to a station). This should be just the platform identifier (eg. \"G\" or \"3\"). Words like \"platform\" or \"track\" (or the feed's language-specific equivalent) should not be included. This allows feed consumers to more easily internationalize and localize the platform identifier into other languages."]
-stop_access string [note: "Indicates how the stop is accessed for a particular station. When stop_access is empty, the access for the specified stop or platform is considered undefined."]
+stop_access gtfs.stops_stop_access_options [note: "Indicates how the stop is accessed for a particular station. When stop_access is empty, the access for the specified stop or platform is considered undefined."]
+Note: 'Stops where vehicles pick up or drop off riders. Also defines stations and station entrances.'
 }
 
-Table routes {
+Table gtfs.routes {
 route_id string [not null, pk, note: "Identifies a route."]
-agency_id string [note: "Agency for the specified route."]
+agency_id string [ref: > gtfs.agency.agency_id, note: "Agency for the specified route."]
 route_short_name string [note: "Short name of a route. Often a short, abstract identifier (e.g., \"32\", \"100X\", \"Green\") that riders use to identify a route. Both route_short_name and route_long_name may be defined."]
 route_long_name string [note: "Full name of a route. This name is generally more descriptive than the route_short_name and often includes the route's destination or stop. Both route_short_name and route_long_name may be defined."]
 route_desc string [note: "Description of a route that provides useful, quality information. Should not be a duplicate of route_short_name or route_long_name."]
-route_type string [not null, note: "Indicates the type of transportation used on a route."]
+route_type gtfs.routes_route_type_options [not null, note: "Indicates the type of transportation used on a route."]
 route_url string [note: "URL of a web page about the particular route. Should be different from the agency.agency_url value."]
 route_color string [note: "Route color designation that matches public facing material. Defaults to white (FFFFFF) when omitted or left empty. The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen."]
 route_text_color string [note: "Legible color to use for text drawn against a background of route_color. Defaults to black (000000) when omitted or left empty. The color difference between route_color and route_text_color should provide sufficient contrast when viewed on a black and white screen."]
 route_sort_order int [note: "Orders the routes in a way which is ideal for presentation to customers. Routes with smaller route_sort_order values should be displayed first."]
-continuous_pickup string [note: "Indicates that the rider can board the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_pickup may be overridden by defining values in stop_times.continuous_pickup for specific stop_times along the route."]
-continuous_drop_off string [note: "Indicates that the rider can alight from the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_drop_off may be overridden by defining values in stop_times.continuous_drop_off for specific stop_times along the route."]
+continuous_pickup gtfs.routes_continuous_pickup_options [note: "Indicates that the rider can board the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_pickup may be overridden by defining values in stop_times.continuous_pickup for specific stop_times along the route."]
+continuous_drop_off gtfs.routes_continuous_drop_off_options [note: "Indicates that the rider can alight from the transit vehicle at any point along the vehicle's travel path as described by shapes.txt, on every trip of the route. Values for routes.continuous_drop_off may be overridden by defining values in stop_times.continuous_drop_off for specific stop_times along the route."]
 network_id string [note: "Identifies a group of routes. Multiple rows in routes.txt may have the same network_id."]
-cemv_support string [note: "Indicates if riders can access a transit service (i.e., trip) associated with this route by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this route are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support."]
+cemv_support gtfs.routes_cemv_support_options [note: "Indicates if riders can access a transit service (i.e., trip) associated with this route by using a contactless EMV (Europay, Mastercard, and Visa) card or mobile device as fare media at a fare validator (such as in pay-as-you-go or open-loop systems). This field does not indicate that cEMV can be used to purchase other fare products or to add value to another fare media. Support for cEMVs should only be indicated if all services under this route are accessible with the use of cEMV cards or mobile devices as fare media. If both agency.cemv_support and routes.cemv_support are provided for the same service, the value in routes.cemv_support shall take precedence. This field is independent of all other fare-related files and may be used separately. If there is conflicting information between this field and any fare-related file (such as fare_media.txt, fare_products.txt, or fare_leg_rules.txt), the information in those files shall take precedence over agency.cemv_support."]
+Note: 'Transit routes. A route is a group of trips that are displayed to riders as a single service.'
+}
+
+Table gtfs.shapes {
+shape_id string [not null, pk, note: "Identifies a shape."]
+shape_pt_lat float [not null, note: "Latitude of a shape point. Each record in shapes.txt represents a shape point used to define the shape."]
+shape_pt_lon float [not null, note: "Longitude of a shape point."]
+shape_pt_sequence int [not null, pk, note: "Sequence in which the shape points connect to form the shape. Values must increase along the trip but do not need to be consecutive."]
+shape_dist_traveled float [note: "Actual distance traveled along the shape from the first shape point to the point specified in this record. Used by trip planners to show the correct portion of the shape on a map. Values must increase along with shape_pt_sequence; they must not be used to show reverse travel along a route. Distance units must be consistent with those used in stop_times.txt. Recommended for routes that have looping or inlining (the vehicle crosses or travels over the same portion of alignment in one trip). If a vehicle retraces or crosses the route alignment at points in the course of a trip, shape_dist_traveled is important to clarify how portions of the points in shapes.txt line up correspond with records in stop_times.txt."]
+Note: 'Rules for mapping vehicle travel paths, sometimes referred to as route alignments.'
+}
+
+Table gtfs.calendar {
+service_id string [not null, pk, note: "Identifies a set of dates when service is available for one or more routes."]
+monday gtfs.calendar_monday_options [not null, note: "Indicates whether the service operates on all Mondays in the date range specified by the start_date and end_date fields. Note that exceptions for particular dates may be listed in calendar_dates.txt."]
+tuesday gtfs.calendar_tuesday_options [not null, note: "Functions in the same way as monday except applies to Tuesdays."]
+wednesday gtfs.calendar_wednesday_options [not null, note: "Functions in the same way as monday except applies to Wednesdays."]
+thursday gtfs.calendar_thursday_options [not null, note: "Functions in the same way as monday except applies to Thursdays."]
+friday gtfs.calendar_friday_options [not null, note: "Functions in the same way as monday except applies to Fridays."]
+saturday gtfs.calendar_saturday_options [not null, note: "Functions in the same way as monday except applies to Saturdays."]
+sunday gtfs.calendar_sunday_options [not null, note: "Functions in the same way as monday except applies to Sundays."]
+start_date date [not null, note: "Start service day for the service interval."]
+end_date date [not null, note: "End service day for the service interval. This service day is included in the interval."]
+Note: 'Service dates specified using a weekly schedule with start and end dates.'
+}
+
+Table gtfs.trips {
+route_id string [not null, ref: > gtfs.routes.route_id, note: "Identifies a route."]
+service_id string [not null, ref: > gtfs.calendar.service_id, note: "Identifies a set of dates when service is available for one or more routes."]
+trip_id string [not null, pk, note: "Identifies a trip."]
+trip_headsign string [note: "Text that appears on signage identifying the trip's destination to riders."]
+trip_short_name string [note: "Public-facing text used to identify the trip to riders, for instance, to identify train numbers for commuter rail trips."]
+direction_id gtfs.trips_direction_id_options [note: "Indicates the direction of travel for a trip."]
+block_id string [note: "Identifies the block to which the trip belongs."]
+shape_id string [ref: > gtfs.shapes.shape_id, note: "Identifies a geospatial shape describing the vehicle travel path for a trip."]
+wheelchair_accessible gtfs.trips_wheelchair_accessible_options [note: "Indicates wheelchair accessibility."]
+bikes_allowed gtfs.trips_bikes_allowed_options [note: "Indicates whether bikes are allowed."]
+cars_allowed gtfs.trips_cars_allowed_options [note: "Indicates whether cars are allowed."]
+Note: 'Trips for each route. A trip is a sequence of two or more stops that occur during a specific time period.'
 }
 
